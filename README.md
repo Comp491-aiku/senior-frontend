@@ -16,13 +16,13 @@ AI-powered travel planning application frontend built with Next.js 15, TypeScrip
 
 ## Features
 
-- 🎯 Trip planning with AI-powered recommendations
-- 📅 Interactive itinerary builder with day-by-day schedules
-- 🗺️ Map integration for visualizing locations
-- 💰 Budget tracking and cost management
-- 🌤️ Weather forecasts for travel dates
-- ✈️ Flight and accommodation search
-- 🎨 Modern, responsive UI with dark mode support
+- Trip planning with AI-powered recommendations
+- Interactive itinerary builder with day-by-day schedules
+- Map integration for visualizing locations
+- Budget tracking and cost management
+- Weather forecasts for travel dates
+- Flight and accommodation search
+- Modern, responsive UI with dark mode support
 
 ## Project Structure
 
