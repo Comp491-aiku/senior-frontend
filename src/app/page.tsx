@@ -1,398 +1,771 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
-  Plane,
   Sparkles,
-  MapPin,
+  MessageSquare,
+  Zap,
+  Users,
+  CheckCircle2,
+  ArrowRight,
+  Mic,
+  Globe,
   Calendar,
   DollarSign,
-  Clock,
-  Users,
+  MapPin,
   Star,
-  TrendingUp,
   Shield,
-  Zap,
-  Globe,
-  ArrowRight,
-  Check
+  Lock,
+  Award
 } from 'lucide-react'
+import { TypeWriter } from '@/components/TypeWriter'
+import { AnimatedCounter } from '@/components/AnimatedCounter'
+import { FadeInSection } from '@/components/FadeInSection'
+import { ParallaxCard } from '@/components/ParallaxCard'
+import { TestimonialCard } from '@/components/TestimonialCard'
+import { DestinationCard } from '@/components/DestinationCard'
 
 export default function Home() {
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/10 via-background to-background py-20 md:py-32">
+      {/* Hero Section - Focused on Chat Interface */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background py-20 md:py-32">
+        {/* Background decoration - Enhanced */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+
         <div className="container">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <Badge className="w-fit">
-                <Sparkles className="h-3 w-3 mr-1" />
+          <div className="max-w-6xl mx-auto">
+            <FadeInSection className="text-center mb-12">
+              <Badge className="mb-6 text-base px-4 py-2 animate-bounce">
+                <Sparkles className="h-4 w-4 mr-2" />
                 AI-Powered Travel Planning
               </Badge>
 
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
-                Plan Your Perfect Trip with{' '}
-                <span className="text-primary">AI Intelligence</span>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-600 to-pink-600 animate-gradient">
+                  Plan Your Trip to{' '}
+                </span>
+                <br />
+                <TypeWriter
+                  texts={['Paris', 'Tokyo', 'Bali', 'New York', 'Dubai', 'Rome']}
+                  className="bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-purple-600 to-primary"
+                />
               </h1>
 
-              <p className="text-xl text-muted-foreground max-w-2xl">
-                Let our advanced AI agents create personalized itineraries tailored to your preferences,
-                budget, and travel style. Experience smarter travel planning.
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
+                Talk to our AI or type your dream trip. Our intelligent agents will plan everything -
+                flights, hotels, activities, and more.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/trip/create">
-                  <Button size="lg" className="text-lg h-12 px-8">
-                    Start Planning
-                    <ArrowRight className="ml-2 h-5 w-5" />
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <Link href="/trip/plan">
+                  <Button size="lg" className="text-lg h-14 px-8 gap-2 group">
+                    <MessageSquare className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                    Start Planning Now
+                    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
                 <Link href="#how-it-works">
-                  <Button size="lg" variant="outline" className="text-lg h-12 px-8">
+                  <Button size="lg" variant="outline" className="text-lg h-14 px-8 hover:scale-105 transition-transform">
                     See How It Works
                   </Button>
                 </Link>
               </div>
 
-              <div className="flex items-center gap-8 pt-4">
+              {/* Trust indicators - Enhanced with AnimatedCounter */}
+              <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-8 rounded-full bg-primary/20 border-2 border-background flex items-center justify-center text-xs font-semibold"
-                      >
-                        {i}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-sm">
-                    <div className="font-semibold">10,000+ travelers</div>
-                    <div className="text-muted-foreground">planned their trips</div>
-                  </div>
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <span>Free to plan</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <AnimatedCounter end={15} suffix="K+ trips planned" className="font-semibold" />
                 </div>
               </div>
-            </div>
+            </FadeInSection>
 
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-500/20 blur-3xl" />
-              <Card className="relative">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>Your Trip to Paris</CardTitle>
-                    <Badge>Confirmed</Badge>
-                  </div>
-                  <CardDescription>7 days • 2 travelers</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
-                      <Plane className="h-5 w-5 text-primary" />
-                      <div className="flex-1">
-                        <p className="font-medium">Flight to Paris</p>
-                        <p className="text-sm text-muted-foreground">Mon, Dec 15 • 10:30 AM</p>
+            {/* Hero Demo - Chat Interface Preview - Enhanced */}
+            <FadeInSection delay={200} className="relative max-w-4xl mx-auto">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-500/20 blur-3xl -z-10 animate-pulse" />
+
+              <ParallaxCard>
+                <Card className="p-6 backdrop-blur-sm bg-background/95 border-2 shadow-2xl">
+                  <div className="space-y-4">
+                    {/* Example chat messages */}
+                    <div className="flex gap-3 animate-fade-in">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Users className="h-5 w-5 text-primary" />
                       </div>
-                      <Check className="h-5 w-5 text-green-500" />
+                      <div className="flex-1">
+                        <div className="bg-muted rounded-2xl rounded-tl-none p-4 hover:scale-[1.02] transition-transform">
+                          <p className="text-sm">
+                            "I want to visit Paris for 5 days in December with my partner.
+                            Budget around $3000. We love museums and good food."
+                          </p>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1 ml-1">You</p>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
-                      <MapPin className="h-5 w-5 text-primary" />
-                      <div className="flex-1">
-                        <p className="font-medium">Visit Eiffel Tower</p>
-                        <p className="text-sm text-muted-foreground">Tue, Dec 16 • 2:00 PM</p>
+                    <div className="flex gap-3 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0 shadow-lg">
+                        <Sparkles className="h-5 w-5 text-primary-foreground animate-pulse" />
                       </div>
-                      <Check className="h-5 w-5 text-green-500" />
+                      <div className="flex-1">
+                        <div className="bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-2xl rounded-tl-none p-4 border border-primary/20 hover:scale-[1.02] transition-transform">
+                          <p className="text-sm font-medium mb-2">Perfect! I'm planning your Paris trip...</p>
+                          <div className="space-y-1 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                              <span>✓ Found 12 flights within budget</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                              <span>✓ 8 romantic hotels in central Paris</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />
+                              <span>⟳ Planning museum visits...</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />
+                              <span>⟳ Finding best restaurants...</span>
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1 ml-1">AI Assistant</p>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
-                      <Users className="h-5 w-5 text-primary" />
-                      <div className="flex-1">
-                        <p className="font-medium">Louvre Museum Tour</p>
-                        <p className="text-sm text-muted-foreground">Wed, Dec 17 • 10:00 AM</p>
+                    {/* Input area preview */}
+                    <div className="flex gap-2 pt-2">
+                      <div className="flex-1 bg-muted rounded-full px-4 py-3 flex items-center gap-2 hover:bg-muted/80 transition-colors cursor-pointer">
+                        <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">
+                          Type your message or click to speak...
+                        </span>
                       </div>
-                      <Clock className="h-5 w-5 text-muted-foreground" />
+                      <Button size="icon" className="rounded-full h-12 w-12 hover:scale-110 transition-transform">
+                        <Mic className="h-5 w-5" />
+                      </Button>
                     </div>
                   </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t">
-                    <span className="text-sm text-muted-foreground">Total Budget</span>
-                    <span className="text-2xl font-bold">$2,450</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 md:py-32 bg-muted/50">
+      {/* Key Features - How It Works */}
+      <section id="how-it-works" className="py-20 md:py-32 bg-muted/30">
         <div className="container">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge className="mb-4">Features</Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Everything You Need for Perfect Travel Planning
+              How AIKU Works
             </h2>
             <p className="text-xl text-muted-foreground">
-              Powered by advanced AI agents that work together to create your ideal itinerary
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card>
-              <CardHeader>
-                <Sparkles className="h-12 w-12 text-primary mb-4" />
-                <CardTitle>AI-Powered Planning</CardTitle>
-                <CardDescription>
-                  Our intelligent agents analyze millions of data points to create the perfect itinerary for you
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <DollarSign className="h-12 w-12 text-primary mb-4" />
-                <CardTitle>Smart Budget Optimization</CardTitle>
-                <CardDescription>
-                  Get the best value with automatic budget optimization and cost-effective recommendations
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <Calendar className="h-12 w-12 text-primary mb-4" />
-                <CardTitle>Flexible Scheduling</CardTitle>
-                <CardDescription>
-                  Intelligent scheduling that adapts to your pace, interests, and travel style preferences
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <MapPin className="h-12 w-12 text-primary mb-4" />
-                <CardTitle>Local Recommendations</CardTitle>
-                <CardDescription>
-                  Discover hidden gems and popular attractions with insights from local data sources
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <Globe className="h-12 w-12 text-primary mb-4" />
-                <CardTitle>Real-Time Weather</CardTitle>
-                <CardDescription>
-                  Plan activities based on accurate weather forecasts and seasonal recommendations
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <Zap className="h-12 w-12 text-primary mb-4" />
-                <CardTitle>Instant Updates</CardTitle>
-                <CardDescription>
-                  Get real-time updates on flight changes, weather alerts, and local events
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 md:py-32">
-        <div className="container">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge className="mb-4">How It Works</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Plan Your Trip in 3 Simple Steps
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Our AI agents handle the complexity while you enjoy the simplicity
+              Three simple steps to your perfect trip
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="relative">
-              <div className="absolute top-8 left-8 -z-10 w-24 h-24 bg-primary/10 rounded-full blur-xl" />
-              <Card className="text-center">
-                <CardHeader>
-                  <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                    <span className="text-2xl font-bold text-primary">1</span>
+            <FadeInSection delay={100}>
+              <ParallaxCard>
+                <Card className="p-8 text-center relative overflow-hidden h-full hover:shadow-2xl transition-shadow">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16" />
+                  <div className="relative">
+                    <div className="mx-auto w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 hover:scale-110 transition-transform">
+                      <MessageSquare className="h-8 w-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3">1. Tell Us Your Dream</h3>
+                    <p className="text-muted-foreground">
+                      Talk or type naturally. "I want a beach vacation in Thailand" or
+                      "Weekend trip to New York for shopping"
+                    </p>
                   </div>
-                  <CardTitle>Share Your Preferences</CardTitle>
-                  <CardDescription>
-                    Tell us your destination, dates, budget, and interests. Our AI learns your travel style.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
 
-            <div className="relative">
-              <div className="absolute top-8 right-8 -z-10 w-24 h-24 bg-purple-500/10 rounded-full blur-xl" />
-              <Card className="text-center">
-                <CardHeader>
-                  <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                    <span className="text-2xl font-bold text-primary">2</span>
+            <FadeInSection delay={200}>
+              <ParallaxCard>
+                <Card className="p-8 text-center relative overflow-hidden h-full hover:shadow-2xl transition-shadow">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16" />
+                  <div className="relative">
+                    <div className="mx-auto w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 hover:scale-110 transition-transform">
+                      <Zap className="h-8 w-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3">2. AI Plans Everything</h3>
+                    <p className="text-muted-foreground">
+                      Watch our 5 AI agents work together - finding flights, hotels,
+                      activities, checking weather, and optimizing your budget
+                    </p>
                   </div>
-                  <CardTitle>AI Creates Your Itinerary</CardTitle>
-                  <CardDescription>
-                    Watch as our specialized agents work together to craft your perfect trip in minutes.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
 
-            <div className="relative">
-              <div className="absolute top-8 left-8 -z-10 w-24 h-24 bg-primary/10 rounded-full blur-xl" />
-              <Card className="text-center">
-                <CardHeader>
-                  <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                    <span className="text-2xl font-bold text-primary">3</span>
+            <FadeInSection delay={300}>
+              <ParallaxCard>
+                <Card className="p-8 text-center relative overflow-hidden h-full hover:shadow-2xl transition-shadow">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16" />
+                  <div className="relative">
+                    <div className="mx-auto w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 hover:scale-110 transition-transform">
+                      <CheckCircle2 className="h-8 w-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3">3. Edit & Book</h3>
+                    <p className="text-muted-foreground">
+                      Review, modify, share with friends, find alternatives,
+                      or let AI book everything automatically
+                    </p>
                   </div>
-                  <CardTitle>Travel with Confidence</CardTitle>
-                  <CardDescription>
-                    Get a detailed day-by-day plan with bookings, maps, and real-time updates.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
+      {/* Popular Destinations */}
+      <section className="py-20 md:py-32 bg-muted/30">
         <div className="container">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-5xl font-bold mb-2">10K+</div>
-              <div className="text-primary-foreground/80">Happy Travelers</div>
-            </div>
-            <div>
-              <div className="text-5xl font-bold mb-2">150+</div>
-              <div className="text-primary-foreground/80">Countries Covered</div>
-            </div>
-            <div>
-              <div className="text-5xl font-bold mb-2">50K+</div>
-              <div className="text-primary-foreground/80">Itineraries Created</div>
-            </div>
-            <div>
-              <div className="text-5xl font-bold mb-2">4.9★</div>
-              <div className="text-primary-foreground/80">Average Rating</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* AI Agents Section */}
-      <section className="py-20 md:py-32 bg-muted/50">
-        <div className="container">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge className="mb-4">Our AI Agents</Badge>
+          <FadeInSection className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Meet Your Personal Travel Team
+              Popular Destinations
             </h2>
             <p className="text-xl text-muted-foreground">
-              5 specialized AI agents working together to create your perfect itinerary
+              Start planning your dream trip to these amazing destinations
+            </p>
+          </FadeInSection>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            <FadeInSection delay={100}>
+              <DestinationCard
+                name="Paris"
+                country="France"
+                image="/destinations/paris.jpg"
+                price="From $1,200"
+                duration="5-7 days"
+                description="The City of Light awaits with iconic landmarks, world-class museums, and romantic cafes."
+                tags={['Culture', 'Romance', 'Food']}
+                gradient="from-pink-500 to-rose-600"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={200}>
+              <DestinationCard
+                name="Tokyo"
+                country="Japan"
+                image="/destinations/tokyo.jpg"
+                price="From $1,800"
+                duration="7-10 days"
+                description="Experience the perfect blend of ancient traditions and cutting-edge technology."
+                tags={['Culture', 'Food', 'Tech']}
+                gradient="from-red-500 to-pink-600"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={300}>
+              <DestinationCard
+                name="Bali"
+                country="Indonesia"
+                image="/destinations/bali.jpg"
+                price="From $900"
+                duration="7-14 days"
+                description="Tropical paradise with stunning beaches, ancient temples, and vibrant culture."
+                tags={['Beach', 'Relax', 'Adventure']}
+                gradient="from-emerald-500 to-teal-600"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={400}>
+              <DestinationCard
+                name="New York"
+                country="USA"
+                image="/destinations/newyork.jpg"
+                price="From $1,500"
+                duration="4-6 days"
+                description="The city that never sleeps offers endless entertainment, dining, and culture."
+                tags={['City', 'Shopping', 'Culture']}
+                gradient="from-blue-500 to-indigo-600"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={500}>
+              <DestinationCard
+                name="Dubai"
+                country="UAE"
+                image="/destinations/dubai.jpg"
+                price="From $1,400"
+                duration="5-7 days"
+                description="Futuristic city with luxury shopping, ultramodern architecture, and desert adventures."
+                tags={['Luxury', 'Shopping', 'Desert']}
+                gradient="from-amber-500 to-orange-600"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={600}>
+              <DestinationCard
+                name="Santorini"
+                country="Greece"
+                image="/destinations/santorini.jpg"
+                price="From $1,100"
+                duration="5-7 days"
+                description="Breathtaking sunsets, white-washed buildings, and crystal-clear Aegean waters."
+                tags={['Beach', 'Romance', 'Relax']}
+                gradient="from-cyan-500 to-blue-600"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={700}>
+              <DestinationCard
+                name="Iceland"
+                country="Iceland"
+                image="/destinations/iceland.jpg"
+                price="From $2,000"
+                duration="7-10 days"
+                description="Land of fire and ice with glaciers, hot springs, and the Northern Lights."
+                tags={['Nature', 'Adventure', 'Unique']}
+                gradient="from-purple-500 to-violet-600"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={800}>
+              <DestinationCard
+                name="Maldives"
+                country="Maldives"
+                image="/destinations/maldives.jpg"
+                price="From $2,500"
+                duration="5-7 days"
+                description="Overwater villas, pristine beaches, and world-class diving in paradise."
+                tags={['Beach', 'Luxury', 'Honeymoon']}
+                gradient="from-teal-500 to-cyan-600"
+              />
+            </FadeInSection>
+          </div>
+        </div>
+      </section>
+
+      {/* Modes Section */}
+      <section className="py-20 md:py-32">
+        <div className="container">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Three Planning Modes
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Choose how you want to plan - from fully automatic to full control
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
-            <Card className="text-center">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                  <Zap className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-lg">Orchestrator</CardTitle>
-                <CardDescription>
-                  Coordinates all agents to create the perfect plan
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <FadeInSection delay={100}>
+              <ParallaxCard>
+                <Card className="p-6 border-2 hover:border-primary transition-colors h-full hover:shadow-xl">
+                  <Badge className="mb-4">Most Popular</Badge>
+                  <h3 className="text-2xl font-bold mb-2">Plan Mode</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Get suggestions and recommendations. Edit freely, no commitments.
+                  </p>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>See all options</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Edit anytime</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Share with friends</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Find alternatives</span>
+                    </li>
+                  </ul>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
 
-            <Card className="text-center">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                  <Plane className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-lg">Flight Agent</CardTitle>
-                <CardDescription>
-                  Finds best flight options and prices
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <FadeInSection delay={200}>
+              <ParallaxCard>
+                <Card className="p-6 border-2 hover:border-primary transition-colors h-full hover:shadow-xl">
+                  <Badge variant="outline" className="mb-4">For Busy Travelers</Badge>
+                  <h3 className="text-2xl font-bold mb-2">Auto-Pay Mode</h3>
+                  <p className="text-muted-foreground mb-4">
+                    AI books everything automatically. Fastest way to plan and travel.
+                  </p>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Instant booking</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Best prices</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Hands-free</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Save time</span>
+                    </li>
+                  </ul>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
 
-            <Card className="text-center">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                  <MapPin className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-lg">Hotel Agent</CardTitle>
-                <CardDescription>
-                  Recommends perfect accommodations
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                  <Star className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-lg">Activity Agent</CardTitle>
-                <CardDescription>
-                  Plans activities based on interests
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                  <Globe className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-lg">Weather Agent</CardTitle>
-                <CardDescription>
-                  Provides accurate weather forecasts
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <FadeInSection delay={300}>
+              <ParallaxCard>
+                <Card className="p-6 border-2 hover:border-primary transition-colors h-full hover:shadow-xl">
+                  <Badge variant="outline" className="mb-4">Full Control</Badge>
+                  <h3 className="text-2xl font-bold mb-2">Edit Mode</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Modify existing plans. Ask for alternatives and replacements.
+                  </p>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Change anything</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Get alternatives</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Real-time updates</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <span>Collaborative</span>
+                    </li>
+                  </ul>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
           </div>
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="py-20 bg-muted/30">
+        <div className="container">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Powered by AI Agents
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              5 specialized agents working in parallel to create your perfect trip
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <FadeInSection delay={100}>
+              <ParallaxCard intensity={5}>
+                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
+                  <Globe className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+                  <h3 className="font-semibold mb-2">Orchestrator Agent</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Coordinates all agents, decides parallel vs sequential execution
+                  </p>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
+
+            <FadeInSection delay={150}>
+              <ParallaxCard intensity={5}>
+                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
+                  <Calendar className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+                  <h3 className="font-semibold mb-2">Flight Agent</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Searches thousands of flights, finds best prices and times
+                  </p>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
+
+            <FadeInSection delay={200}>
+              <ParallaxCard intensity={5}>
+                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
+                  <MapPin className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+                  <h3 className="font-semibold mb-2">Hotel Agent</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Finds perfect accommodations based on your preferences
+                  </p>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
+
+            <FadeInSection delay={250}>
+              <ParallaxCard intensity={5}>
+                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
+                  <Sparkles className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+                  <h3 className="font-semibold mb-2">Activity Agent</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Plans activities, restaurants, and experiences
+                  </p>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
+
+            <FadeInSection delay={300}>
+              <ParallaxCard intensity={5}>
+                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
+                  <Zap className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+                  <h3 className="font-semibold mb-2">Weather Agent</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Provides forecasts and suggests weather-appropriate activities
+                  </p>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
+
+            <FadeInSection delay={350}>
+              <ParallaxCard intensity={5}>
+                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
+                  <DollarSign className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+                  <h3 className="font-semibold mb-2">Budget Optimizer</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Ensures everything stays within your budget limits
+                  </p>
+                </Card>
+              </ParallaxCard>
+            </FadeInSection>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 md:py-32 bg-muted/30">
+        <div className="container">
+          <FadeInSection className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Loved by Travelers Worldwide
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              See what our users say about their AI-planned adventures
+            </p>
+          </FadeInSection>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <FadeInSection delay={100}>
+              <TestimonialCard
+                name="Sarah Johnson"
+                role="Travel Blogger"
+                image="/testimonials/sarah.jpg"
+                rating={5}
+                text="AIKU planned my entire 2-week European tour in minutes! Every detail was perfect - from boutique hotels to hidden local restaurants. The AI understood exactly what I wanted."
+                trip="Paris, Rome & Barcelona"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={200}>
+              <TestimonialCard
+                name="Michael Chen"
+                role="Software Engineer"
+                image="/testimonials/michael.jpg"
+                rating={5}
+                text="As someone who hates planning, this is a game-changer. I just said 'Beach vacation under $2000' and got an amazing Bali itinerary with flights, hotels, and activities."
+                trip="Bali, Indonesia"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={300}>
+              <TestimonialCard
+                name="Emily Rodriguez"
+                role="Marketing Director"
+                image="/testimonials/emily.jpg"
+                rating={5}
+                text="The AI agents working in parallel is incredible. I watched it find flights, hotels, and plan daily activities simultaneously. Saved me 10+ hours of research!"
+                trip="Tokyo, Japan"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={400}>
+              <TestimonialCard
+                name="David Park"
+                role="Photographer"
+                image="/testimonials/david.jpg"
+                rating={5}
+                text="Best travel planning tool ever. It suggested photography spots I'd never heard of and perfectly timed everything around golden hour. Absolutely brilliant!"
+                trip="Iceland"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={500}>
+              <TestimonialCard
+                name="Lisa Thompson"
+                role="Teacher"
+                image="/testimonials/lisa.jpg"
+                rating={5}
+                text="Planning a family trip with kids is usually stressful. AIKU found kid-friendly restaurants, activities, and even suggested the best times to visit attractions."
+                trip="Orlando, Florida"
+              />
+            </FadeInSection>
+
+            <FadeInSection delay={600}>
+              <TestimonialCard
+                name="James Wilson"
+                role="Entrepreneur"
+                image="/testimonials/james.jpg"
+                rating={5}
+                text="Used auto-pay mode and everything was booked while I focused on work. Trip was flawless. This is the future of travel planning!"
+                trip="Dubai, UAE"
+              />
+            </FadeInSection>
+          </div>
+
+          {/* Stats Row */}
+          <FadeInSection delay={700} className="mt-16">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary mb-2">
+                  <AnimatedCounter end={15} suffix="K+" />
+                </div>
+                <p className="text-sm text-muted-foreground">Trips Planned</p>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary mb-2">
+                  <AnimatedCounter end={98} suffix="%" />
+                </div>
+                <p className="text-sm text-muted-foreground">Satisfaction Rate</p>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary mb-2">
+                  <AnimatedCounter end={120} suffix="+" />
+                </div>
+                <p className="text-sm text-muted-foreground">Countries</p>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary mb-2">
+                  <AnimatedCounter end={4.9} start={0} suffix="/5" />
+                </div>
+                <p className="text-sm text-muted-foreground">Average Rating</p>
+              </div>
+            </div>
+          </FadeInSection>
+        </div>
+      </section>
+
+      {/* Trust & Security Section */}
+      <section className="py-20">
+        <div className="container">
+          <FadeInSection>
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                  Your Trust is Our Priority
+                </h2>
+                <p className="text-muted-foreground">
+                  We partner with industry leaders to ensure your data and payments are secure
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-4 gap-8">
+                <FadeInSection delay={100}>
+                  <div className="text-center">
+                    <div className="mx-auto w-16 h-16 bg-green-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <Shield className="h-8 w-8 text-green-500" />
+                    </div>
+                    <h3 className="font-semibold mb-2">SSL Encrypted</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Bank-level encryption for all transactions
+                    </p>
+                  </div>
+                </FadeInSection>
+
+                <FadeInSection delay={200}>
+                  <div className="text-center">
+                    <div className="mx-auto w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <Lock className="h-8 w-8 text-blue-500" />
+                    </div>
+                    <h3 className="font-semibold mb-2">GDPR Compliant</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Your privacy is protected by law
+                    </p>
+                  </div>
+                </FadeInSection>
+
+                <FadeInSection delay={300}>
+                  <div className="text-center">
+                    <div className="mx-auto w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <Award className="h-8 w-8 text-purple-500" />
+                    </div>
+                    <h3 className="font-semibold mb-2">Industry Certified</h3>
+                    <p className="text-sm text-muted-foreground">
+                      SOC 2 Type II certified platform
+                    </p>
+                  </div>
+                </FadeInSection>
+
+                <FadeInSection delay={400}>
+                  <div className="text-center">
+                    <div className="mx-auto w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <CheckCircle2 className="h-8 w-8 text-orange-500" />
+                    </div>
+                    <h3 className="font-semibold mb-2">Verified Partners</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Only trusted travel providers
+                    </p>
+                  </div>
+                </FadeInSection>
+              </div>
+
+              {/* Partner Logos */}
+              <FadeInSection delay={500} className="mt-16">
+                <div className="border-t pt-12">
+                  <p className="text-center text-sm text-muted-foreground mb-8">
+                    Trusted by leading travel platforms
+                  </p>
+                  <div className="flex flex-wrap items-center justify-center gap-12 opacity-50 grayscale">
+                    <div className="text-2xl font-bold">Google Maps</div>
+                    <div className="text-2xl font-bold">Stripe</div>
+                    <div className="text-2xl font-bold">Amadeus</div>
+                    <div className="text-2xl font-bold">Booking.com</div>
+                  </div>
+                </div>
+              </FadeInSection>
+            </div>
+          </FadeInSection>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="py-20 md:py-32">
         <div className="container">
-          <Card className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-purple-500/10" />
-            <CardHeader className="relative text-center py-16">
-              <CardTitle className="text-4xl md:text-5xl font-bold mb-4">
-                Ready to Start Your Adventure?
-              </CardTitle>
-              <CardDescription className="text-xl mb-8">
-                Join thousands of travelers who trust AIKU for their trip planning
-              </CardDescription>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/trip/create">
-                  <Button size="lg" className="text-lg h-12 px-8">
-                    Create Your Free Trip
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link href="/about">
-                  <Button size="lg" variant="outline" className="text-lg h-12 px-8">
-                    Learn More About Us
-                  </Button>
-                </Link>
-              </div>
-            </CardHeader>
+          <Card className="relative overflow-hidden p-12 md:p-16 text-center bg-gradient-to-br from-primary/10 via-background to-purple-500/10">
+            <div className="absolute inset-0 bg-grid-white/10 [mask-image:radial-gradient(white,transparent_85%)]" />
+            <div className="relative">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Ready to Plan Your Next Adventure?
+              </h2>
+              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Start chatting with our AI. No credit card required, completely free to plan.
+              </p>
+              <Link href="/trip/plan">
+                <Button size="lg" className="text-lg h-14 px-8 gap-2">
+                  <MessageSquare className="h-5 w-5" />
+                  Start Planning Now
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
           </Card>
         </div>
       </section>
