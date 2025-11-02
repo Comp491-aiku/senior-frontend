@@ -254,7 +254,7 @@ export default function Home() {
               <DestinationCard
                 name="Paris"
                 country="France"
-                image="/destinations/paris.jpg"
+                image="/paris.avif"
                 price="From $1,200"
                 duration="5-7 days"
                 description="The City of Light awaits with iconic landmarks, world-class museums, and romantic cafes."
@@ -267,7 +267,7 @@ export default function Home() {
               <DestinationCard
                 name="Tokyo"
                 country="Japan"
-                image="/destinations/tokyo.jpg"
+                image="/tokyo.avif"
                 price="From $1,800"
                 duration="7-10 days"
                 description="Experience the perfect blend of ancient traditions and cutting-edge technology."
@@ -280,7 +280,7 @@ export default function Home() {
               <DestinationCard
                 name="Bali"
                 country="Indonesia"
-                image="/destinations/bali.jpg"
+                image="/bali.avif"
                 price="From $900"
                 duration="7-14 days"
                 description="Tropical paradise with stunning beaches, ancient temples, and vibrant culture."
@@ -293,7 +293,7 @@ export default function Home() {
               <DestinationCard
                 name="New York"
                 country="USA"
-                image="/destinations/newyork.jpg"
+                image="/newyork.avif"
                 price="From $1,500"
                 duration="4-6 days"
                 description="The city that never sleeps offers endless entertainment, dining, and culture."
@@ -306,7 +306,7 @@ export default function Home() {
               <DestinationCard
                 name="Dubai"
                 country="UAE"
-                image="/destinations/dubai.jpg"
+                image="/dubai.avif"
                 price="From $1,400"
                 duration="5-7 days"
                 description="Futuristic city with luxury shopping, ultramodern architecture, and desert adventures."
@@ -319,7 +319,7 @@ export default function Home() {
               <DestinationCard
                 name="Santorini"
                 country="Greece"
-                image="/destinations/santorini.jpg"
+                image="/santorini.avif"
                 price="From $1,100"
                 duration="5-7 days"
                 description="Breathtaking sunsets, white-washed buildings, and crystal-clear Aegean waters."
@@ -332,7 +332,7 @@ export default function Home() {
               <DestinationCard
                 name="Iceland"
                 country="Iceland"
-                image="/destinations/iceland.jpg"
+                image="/iceland.avif"
                 price="From $2,000"
                 duration="7-10 days"
                 description="Land of fire and ice with glaciers, hot springs, and the Northern Lights."
@@ -345,7 +345,7 @@ export default function Home() {
               <DestinationCard
                 name="Maldives"
                 country="Maldives"
-                image="/destinations/maldives.jpg"
+                image="/maldives.avif"
                 price="From $2,500"
                 duration="5-7 days"
                 description="Overwater villas, pristine beaches, and world-class diving in paradise."

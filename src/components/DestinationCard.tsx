@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { MapPin, DollarSign, Calendar, ArrowRight } from 'lucide-react'
 import { ParallaxCard } from './ParallaxCard'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface DestinationCardProps {
   name: string
@@ -33,16 +34,29 @@ export function DestinationCard({
       <Card className="overflow-hidden h-full group cursor-pointer hover:shadow-2xl transition-all duration-300">
         {/* Image with gradient overlay */}
         <div className="relative h-48 overflow-hidden">
-          <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-90`} />
+          {/* Background Image */}
+          <Image
+            src={image}
+            alt={`${name}, ${country}`}
+            fill
+            className="object-cover group-hover:scale-110 transition-transform duration-500"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          />
+          {/* Gradient overlay for better text readability */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-40 group-hover:opacity-30 transition-opacity`} />
+          {/* Dark overlay at bottom for text */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+          {/* Content */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center text-white z-10">
-              <MapPin className="h-8 w-8 mx-auto mb-2 group-hover:scale-110 transition-transform" />
-              <h3 className="text-2xl font-bold">{name}</h3>
-              <p className="text-sm opacity-90">{country}</p>
+              <MapPin className="h-8 w-8 mx-auto mb-2 group-hover:scale-110 transition-transform drop-shadow-lg" />
+              <h3 className="text-2xl font-bold drop-shadow-lg">{name}</h3>
+              <p className="text-sm opacity-90 drop-shadow-md">{country}</p>
             </div>
           </div>
           {/* Animated overlay on hover */}
-          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
 
         <div className="p-6">
