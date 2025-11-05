@@ -39,7 +39,7 @@ export default function TripsPage() {
             View and manage your travel plans
           </p>
         </div>
-        <Link href="/trip/create">
+        <Link href="/trip/plan">
           <Button size="lg">
             <Plus className="mr-2 h-4 w-4" />
             New Trip
@@ -56,7 +56,7 @@ export default function TripsPage() {
           <p className="text-muted-foreground mb-6">
             Start planning your next adventure
           </p>
-          <Link href="/trip/create">
+          <Link href="/trip/plan">
             <Button size="lg">
               <Plus className="mr-2 h-4 w-4" />
               Create Your First Trip

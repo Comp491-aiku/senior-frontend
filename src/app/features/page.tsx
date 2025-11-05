@@ -168,7 +168,7 @@ export default function FeaturesPage() {
             <p className="text-xl text-muted-foreground mb-6">
               Start planning your perfect trip today with AIKU's AI-powered platform
             </p>
-            <a href="/trip/create" className="inline-block">
+            <a href="/trip/plan" className="inline-block">
               <button className="px-8 py-3 bg-primary text-primary-foreground rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors">
                 Get Started Free
               </button>

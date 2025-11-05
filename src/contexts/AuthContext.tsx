@@ -10,6 +10,7 @@ interface AuthContextType {
   user: User | null
   loading: boolean
   login: (email: string, password: string) => Promise<void>
+  loginDemo: () => Promise<void>
   register: (email: string, name: string, password: string) => Promise<void>
   logout: () => void
   isAuthenticated: boolean
@@ -49,6 +50,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const loginDemo = async () => {
+    try {
+      await authService.loginDemo()
+      const currentUser = await authService.getCurrentUser()
+      setUser(currentUser)
+    } catch (error) {
+      throw error
+    }
+  }
+
   const register = async (email: string, name: string, password: string) => {
     try {
       await authService.register({ email, name, password })
@@ -70,6 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         loading,
         login,
+        loginDemo,
         register,
         logout,
         isAuthenticated: !!user,

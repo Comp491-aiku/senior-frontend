@@ -29,6 +29,32 @@ export interface RegisterData {
 
 class AuthService {
   private tokenKey = 'aiku_access_token'
+  private demoTokenKey = 'aiku_demo_mode'
+
+  /**
+   * Login as demo user (no backend required)
+   */
+  async loginDemo(): Promise<AuthTokens> {
+    const demoToken = 'demo_' + Math.random().toString(36).substring(2, 15)
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(this.tokenKey, demoToken)
+      localStorage.setItem(this.demoTokenKey, 'true')
+    }
+
+    return {
+      access_token: demoToken,
+      token_type: 'Bearer'
+    }
+  }
+
+  /**
+   * Check if in demo mode
+   */
+  isDemoMode(): boolean {
+    if (typeof window === 'undefined') return false
+    return localStorage.getItem(this.demoTokenKey) === 'true'
+  }
 
   /**
    * Register a new user
@@ -83,6 +109,16 @@ class AuthService {
       throw new Error('No authentication token found')
     }
 
+    // Return demo user if in demo mode
+    if (this.isDemoMode()) {
+      return {
+        id: 'demo-user',
+        email: 'demo@aiku.app',
+        name: 'Demo User',
+        created_at: new Date().toISOString()
+      }
+    }
+
     const response = await fetch(`${API_URL}/api/auth/me`, {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -105,6 +141,7 @@ class AuthService {
   logout(): void {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(this.tokenKey)
+      localStorage.removeItem(this.demoTokenKey)
     }
   }
 

@@ -12,7 +12,7 @@ import { Alert } from '@/components/ui/alert'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { login } = useAuth()
+  const { login, loginDemo } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -28,6 +28,20 @@ export default function LoginPage() {
       router.push('/trip/plan')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDemoLogin = async () => {
+    setError('')
+    setLoading(true)
+
+    try {
+      await loginDemo()
+      router.push('/trip/plan')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Demo login failed')
     } finally {
       setLoading(false)
     }
@@ -78,6 +92,24 @@ export default function LoginPage() {
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">veya</span>
+          </div>
+        </div>
+
+        <Button
+          variant="outline"
+          className="w-full bg-gradient-to-r from-primary/10 to-purple-500/10 border-2 border-primary/20 hover:bg-primary/20 transition-all"
+          onClick={handleDemoLogin}
+          disabled={loading}
+        >
+          <span className="font-semibold">Demo ile Dene</span>
+        </Button>
 
         <div className="mt-6 text-center text-sm">
           <p className="text-muted-foreground">
