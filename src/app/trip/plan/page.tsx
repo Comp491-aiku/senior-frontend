@@ -9,11 +9,17 @@ import { AlternativeFinderModal } from '@/components/AlternativeFinderModal'
 import { ShareTripModal } from '@/components/ShareTripModal'
 import { CommentsPanel } from '@/components/CommentsPanel'
 import { VotingPanel } from '@/components/VotingPanel'
+import { AgentActivityVisualization } from '@/components/AgentActivityVisualization'
+import { AgentStageView } from '@/components/AgentStageView'
+import { AnimatedTravelChat } from '@/components/AnimatedTravelChat'
+import { TravelAgentTaskPanel } from '@/components/TravelAgentTaskPanel'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert } from '@/components/ui/alert'
+import { AgentActivity } from '@/types'
+import { motion } from 'framer-motion'
 import {
   MessageSquare,
   Mic,
@@ -35,6 +41,7 @@ import {
   Search,
   ThumbsUp,
   RefreshCw,
+  Layers,
 } from 'lucide-react'
 
 type Message = {
@@ -46,14 +53,9 @@ type Message = {
   suggestions?: string[]
 }
 
-type AgentActivity = {
-  agent: string
-  status: 'pending' | 'running' | 'completed' | 'failed'
-  message: string
-  icon: typeof Plane
-}
-
 type PlanningMode = 'plan' | 'auto-pay' | 'edit'
+
+type ViewMode = 'stages' | 'timeline'
 
 export default function TripPlanPage() {
   const router = useRouter()
@@ -76,6 +78,7 @@ export default function TripPlanPage() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [mode, setMode] = useState<PlanningMode>('plan')
+  const [viewMode, setViewMode] = useState<ViewMode>('timeline')
   const [showAgentActivity, setShowAgentActivity] = useState(false)
   const [currentAgentActivity, setCurrentAgentActivity] = useState<AgentActivity[]>([])
   const [tripId, setTripId] = useState<string | undefined>()
@@ -134,11 +137,13 @@ export default function TripPlanPage() {
         setTripId(response.trip_id)
       }
 
-      const agentActivity: AgentActivity[] = response.agent_activity.map((activity) => ({
+      // Parse agent activities from backend response
+      const agentActivity: AgentActivity[] = (response.agent_activity || []).map((activity: any) => ({
         agent: activity.agent,
         status: activity.status,
         message: activity.message,
-        icon: getAgentIcon(activity.agent),
+        progress: activity.progress || 0,
+        data: activity.data,
       }))
 
       const aiMessage: Message = {
@@ -196,103 +201,190 @@ export default function TripPlanPage() {
   }
 
   return (
-    <div className="container mx-auto h-[calc(100vh-4rem)] flex flex-col py-4">
-      {/* Header with Mode Selector */}
-      <div className="mb-4 flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            AI Trip Planner
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Chat with AI to plan your perfect trip
-          </p>
-        </div>
+    <div className="container mx-auto h-[calc(100vh-4rem)] flex flex-col py-8">
+      {/* Hero Section with Animated Chat */}
+      {messages.length <= 1 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12"
+        >
+          <div className="text-center mb-8">
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-600 to-pink-600"
+            >
+              Plan Your Dream Trip
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-xl text-muted-foreground"
+            >
+              Let AI agents handle everything - from flights to activities
+            </motion.p>
+          </div>
 
-        <div className="flex items-center gap-2">
-          {tripId && (
-            <>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShareModalOpen(true)}
-              >
-                <Share2 className="h-4 w-4 mr-2" />
-                Share
-              </Button>
+          <AnimatedTravelChat onSendMessage={async (message) => {
+            const userMessage: Message = {
+              id: Date.now().toString(),
+              role: 'user',
+              content: message,
+              timestamp: new Date(),
+            }
+            setMessages((prev) => [...prev, userMessage])
+            setIsLoading(true)
+            setShowAgentActivity(true)
+            setError('')
+            setCurrentAgentActivity([])
 
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowCollaboration(!showCollaboration)}
-              >
-                <MessageSquare className="h-4 w-4 mr-2" />
-                {showCollaboration ? 'Hide' : 'Show'} Collaboration
-              </Button>
-            </>
-          )}
+            try {
+              const response = await chatService.sendMessage({
+                message: message,
+                planning_mode: mode,
+                trip_id: tripId,
+              })
 
-          <Tabs value={mode} onValueChange={(v) => setMode(v as PlanningMode)}>
-            <TabsList>
-              <TabsTrigger value="plan" className="gap-2">
-                <Settings className="h-4 w-4" />
-                Plan
-              </TabsTrigger>
-              <TabsTrigger value="auto-pay" className="gap-2">
-                <Zap className="h-4 w-4" />
-                Auto-Pay
-              </TabsTrigger>
-              <TabsTrigger value="edit" className="gap-2">
-                <RefreshCw className="h-4 w-4" />
-                Edit
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-      </div>
+              if (response.trip_id) {
+                setTripId(response.trip_id)
+              }
 
-      {/* Error Alert */}
-      {error && (
-        <Alert variant="destructive" className="mb-4">
-          {error}
-        </Alert>
+              const agentActivity: AgentActivity[] = (response.agent_activity || []).map((activity: any) => ({
+                agent: activity.agent,
+                status: activity.status,
+                message: activity.message,
+                progress: activity.progress || 0,
+                data: activity.data,
+              }))
+
+              const aiMessage: Message = {
+                id: response.message_id,
+                role: 'assistant',
+                content: response.content,
+                timestamp: new Date(response.created_at),
+                agentActivity,
+                suggestions: ['Find alternatives', 'Share trip', 'Add to favorites'],
+              }
+
+              setMessages((prev) => [...prev, aiMessage])
+              setCurrentAgentActivity(agentActivity)
+            } catch (err) {
+              setError(err instanceof Error ? err.message : 'Failed to send message')
+              console.error('Error sending message:', err)
+            } finally {
+              setIsLoading(false)
+            }
+          }} />
+        </motion.div>
       )}
 
-      {/* Mode Description */}
-      <Card className="mb-4 p-3 bg-muted/50">
-        <div className="flex items-center gap-2 text-sm">
-          {mode === 'plan' && (
-            <>
-              <CheckCircle2 className="h-4 w-4 text-primary" />
-              <span>
-                <strong>Plan Mode:</strong> Get recommendations, edit freely, no commitments. Share
-                with friends!
-              </span>
-            </>
-          )}
-          {mode === 'auto-pay' && (
-            <>
-              <Zap className="h-4 w-4 text-primary" />
-              <span>
-                <strong>Auto-Pay Mode:</strong> AI will automatically book everything for you.
-                Fastest way to travel!
-              </span>
-            </>
-          )}
-          {mode === 'edit' && (
-            <>
-              <Settings className="h-4 w-4 text-primary" />
-              <span>
-                <strong>Edit Mode:</strong> Modify existing plans, find alternatives, replace items.
-              </span>
-            </>
-          )}
-        </div>
-      </Card>
+      {/* Header with Mode Selector (shown after first message) */}
+      {messages.length > 1 && (
+        <div className="mb-4 flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              <Sparkles className="h-6 w-6 text-primary" />
+              AI Trip Planner
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Chat with AI to plan your perfect trip
+            </p>
+          </div>
 
-      <div className="flex-1 grid lg:grid-cols-3 gap-4 min-h-0">
-        {/* Chat Area */}
-        <Card className={`${showCollaboration ? 'lg:col-span-2' : 'lg:col-span-2'} flex flex-col`}>
+          <div className="flex items-center gap-2">
+            {tripId && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShareModalOpen(true)}
+                >
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowCollaboration(!showCollaboration)}
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  {showCollaboration ? 'Hide' : 'Show'} Collaboration
+                </Button>
+              </>
+            )}
+
+            <Tabs value={mode} onValueChange={(v) => setMode(v as PlanningMode)}>
+              <TabsList>
+                <TabsTrigger value="plan" className="gap-2">
+                  <Settings className="h-4 w-4" />
+                  Plan
+                </TabsTrigger>
+                <TabsTrigger value="auto-pay" className="gap-2">
+                  <Zap className="h-4 w-4" />
+                  Auto-Pay
+                </TabsTrigger>
+                <TabsTrigger value="edit" className="gap-2">
+                  <RefreshCw className="h-4 w-4" />
+                  Edit
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+        </div>
+      )}
+
+      {/* Show chat interface only after first message */}
+      {messages.length > 1 && (
+        <>
+          {/* Error Alert */}
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              {error}
+            </Alert>
+          )}
+
+          {/* Mode Description */}
+          <Card className="mb-4 p-3 bg-muted/50">
+            <div className="flex items-center gap-2 text-sm">
+              {mode === 'plan' && (
+                <>
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <span>
+                    <strong>Plan Mode:</strong> Get recommendations, edit freely, no commitments.
+                    Share with friends!
+                  </span>
+                </>
+              )}
+              {mode === 'auto-pay' && (
+                <>
+                  <Zap className="h-4 w-4 text-primary" />
+                  <span>
+                    <strong>Auto-Pay Mode:</strong> AI will automatically book everything for you.
+                    Fastest way to travel!
+                  </span>
+                </>
+              )}
+              {mode === 'edit' && (
+                <>
+                  <Settings className="h-4 w-4 text-primary" />
+                  <span>
+                    <strong>Edit Mode:</strong> Modify existing plans, find alternatives, replace
+                    items.
+                  </span>
+                </>
+              )}
+            </div>
+          </Card>
+        </>
+      )}
+
+      <div className={`flex-1 ${messages.length > 1 ? 'grid lg:grid-cols-3 gap-4' : ''} min-h-0`}>
+        {/* Chat Area - Only show after first message */}
+        {messages.length > 1 && (
+          <Card className={`${showCollaboration ? 'lg:col-span-2' : 'lg:col-span-2'} flex flex-col`}>
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.map((message) => (
@@ -420,72 +512,57 @@ export default function TripPlanPage() {
             </div>
           </div>
         </Card>
+        )}
 
-        {/* Right Sidebar */}
+        {/* Right Sidebar - Only show after first message */}
+        {messages.length > 1 && (
         <div className="space-y-4 overflow-y-auto">
-          {/* Agent Activity */}
-          <Card className="p-4">
-            <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <Zap className="h-5 w-5 text-primary" />
-              Agent Activity
-            </h3>
+          {/* New Agent Activity Panel with Task Hierarchy */}
+          {(showAgentActivity || isLoading) && messages.length > 1 && <TravelAgentTaskPanel />}
 
-            {showAgentActivity && currentAgentActivity.length > 0 ? (
-              <div className="space-y-4">
-                {currentAgentActivity.map((activity, idx) => {
-                  const Icon = activity.icon
-                  return (
-                    <div key={idx} className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
-                      <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          activity.status === 'completed'
-                            ? 'bg-green-500/10'
-                            : activity.status === 'running'
-                            ? 'bg-primary/10'
-                            : activity.status === 'failed'
-                            ? 'bg-red-500/10'
-                            : 'bg-muted'
-                        }`}
-                      >
-                        <Icon
-                          className={`h-5 w-5 ${
-                            activity.status === 'completed'
-                              ? 'text-green-500'
-                              : activity.status === 'running'
-                              ? 'text-primary'
-                              : activity.status === 'failed'
-                              ? 'text-red-500'
-                              : 'text-muted-foreground'
-                          }`}
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{activity.agent}</p>
-                        <p className="text-xs text-muted-foreground">{activity.message}</p>
-                        {activity.status === 'running' && (
-                          <div className="mt-2 w-full bg-muted rounded-full h-1.5">
-                            <div className="bg-primary h-1.5 rounded-full animate-pulse w-2/3" />
-                          </div>
-                        )}
-                        {activity.status === 'completed' && (
-                          <div className="flex items-center gap-1 mt-1">
-                            <CheckCircle2 className="h-3 w-3 text-green-500" />
-                            <span className="text-xs text-green-500">Completed</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
+          {/* Legacy Agent Activity (optional fallback) */}
+          {!showAgentActivity && !isLoading && currentAgentActivity.length > 0 && (
+            <Card className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-primary" />
+                  Agent Activity
+                </h3>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setViewMode(viewMode === 'timeline' ? 'stages' : 'timeline')}
+                  className="text-xs"
+                >
+                  <Layers className="h-4 w-4 mr-1" />
+                  {viewMode === 'timeline' ? 'Stages' : 'Timeline'}
+                </Button>
               </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
+
+              <div className="space-y-4">
+                {viewMode === 'stages' ? (
+                  <AgentStageView activities={currentAgentActivity} />
+                ) : (
+                  <AgentActivityVisualization
+                    activities={currentAgentActivity}
+                    showDetails={true}
+                  />
+                )}
+              </div>
+            </Card>
+          )}
+
+          {/* Empty state when no activity */}
+          {!showAgentActivity && !isLoading && currentAgentActivity.length === 0 && (
+            <Card className="p-8">
+              <div className="text-center text-muted-foreground">
                 <Clock className="h-12 w-12 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">Agent activity will appear here</p>
                 <p className="text-xs">when you start planning</p>
               </div>
-            )}
-          </Card>
+            </Card>
+          )}
 
           {/* Collaboration Panel (when enabled) */}
           {showCollaboration && tripId && (
@@ -500,6 +577,7 @@ export default function TripPlanPage() {
             </>
           )}
         </div>
+        )}
       </div>
 
       {/* Modals */}
