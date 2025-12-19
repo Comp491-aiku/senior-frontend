@@ -78,7 +78,7 @@ class AuthService {
         localStorage.setItem(this.demoTokenKey, 'true')
       }
       return tokens
-    } catch (error) {
+    } catch {
       throw new Error('Demo login failed. Please check if backend is running.')
     }
   }
