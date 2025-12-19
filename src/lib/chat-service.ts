@@ -49,11 +49,7 @@ class ChatService {
       throw new Error('Authentication required')
     }
 
-    // Demo mode: return mock response
-    if (authService.isDemoMode()) {
-      return this.getMockResponse(request)
-    }
-
+    // Always call real backend - demo mode should also use real API
     const response = await fetch(`${API_URL}/api/chat`, {
       method: 'POST',
       headers: {

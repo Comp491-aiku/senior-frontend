@@ -85,7 +85,10 @@ export default function TripPlanPage() {
   }, [authLoading, isAuthenticated, router])
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    // Add small delay to ensure DOM has updated
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
   }
 
   useEffect(() => {

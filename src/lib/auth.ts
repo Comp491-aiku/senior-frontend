@@ -32,19 +32,54 @@ class AuthService {
   private demoTokenKey = 'aiku_demo_mode'
 
   /**
-   * Login as demo user (no backend required)
+   * Login as demo user (uses real backend with demo credentials)
    */
   async loginDemo(): Promise<AuthTokens> {
-    const demoToken = 'demo_' + Math.random().toString(36).substring(2, 15)
+    const demoEmail = 'demo@aiku.app'
+    const demoPassword = 'demo123456'
+    const demoName = 'Demo User'
 
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(this.tokenKey, demoToken)
-      localStorage.setItem(this.demoTokenKey, 'true')
-    }
+    try {
+      // First try to login with demo credentials
+      const loginResponse = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: demoEmail, password: demoPassword }),
+      })
 
-    return {
-      access_token: demoToken,
-      token_type: 'Bearer'
+      if (loginResponse.ok) {
+        const tokens: AuthTokens = await loginResponse.json()
+        this.setToken(tokens.access_token)
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(this.demoTokenKey, 'true')
+        }
+        return tokens
+      }
+
+      // If login fails, try to register demo user first
+      const registerResponse = await fetch(`${API_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: demoEmail, name: demoName, password: demoPassword }),
+      })
+
+      if (!registerResponse.ok) {
+        const error = await registerResponse.json()
+        throw new Error(error.detail || 'Demo login failed')
+      }
+
+      const tokens: AuthTokens = await registerResponse.json()
+      this.setToken(tokens.access_token)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(this.demoTokenKey, 'true')
+      }
+      return tokens
+    } catch (error) {
+      throw new Error('Demo login failed. Please check if backend is running.')
     }
   }
 
