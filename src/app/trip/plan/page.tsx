@@ -18,6 +18,8 @@ import { Card } from '@/components/ui/card'
 import { Alert } from '@/components/ui/alert'
 import { AgentActivity } from '@/types'
 import { motion } from 'framer-motion'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import {
   MessageSquare,
   Mic,
@@ -304,12 +306,12 @@ export default function TripPlanPage() {
         </Alert>
       )}
 
-      <div className={`flex-1 ${messages.length > 1 ? 'grid lg:grid-cols-3 gap-4' : ''} min-h-0`}>
+      <div className={`flex-1 ${messages.length > 1 ? 'grid lg:grid-cols-3 gap-4' : ''} min-h-0 overflow-hidden`}>
         {/* Chat Area - Only show after first message */}
         {messages.length > 1 && (
-          <Card className={`${showCollaboration ? 'lg:col-span-2' : 'lg:col-span-2'} flex flex-col`}>
+          <Card className={`${showCollaboration ? 'lg:col-span-2' : 'lg:col-span-2'} flex flex-col h-full max-h-full overflow-hidden`}>
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
             {messages.map((message) => (
               <div key={message.id} className="space-y-2">
                 <div
@@ -339,7 +341,15 @@ export default function TripPlanPage() {
                           : 'bg-muted rounded-tl-none'
                       }`}
                     >
-                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      {message.role === 'user' ? (
+                        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      ) : (
+                        <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-ul:text-foreground prose-ol:text-foreground prose-li:text-foreground prose-a:text-primary prose-headings:font-semibold prose-headings:mt-4 prose-headings:mb-2 prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-h1:text-lg prose-h2:text-base prose-h3:text-sm">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {message.content}
+                          </ReactMarkdown>
+                        </div>
+                      )}
                     </div>
                     <p className="text-xs text-muted-foreground mt-1 px-2">
                       {message.timestamp.toLocaleTimeString([], {
@@ -439,7 +449,7 @@ export default function TripPlanPage() {
 
         {/* Right Sidebar - Only show after first message */}
         {messages.length > 1 && (
-        <div className="space-y-4 overflow-y-auto">
+        <div className="space-y-4 overflow-y-auto h-full max-h-full min-h-0">
           {/* New Agent Activity Panel with Task Hierarchy */}
           {(showAgentActivity || isLoading) && messages.length > 1 && <TravelAgentTaskPanel />}
 
