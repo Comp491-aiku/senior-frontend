@@ -24,6 +24,15 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
+
+    --white: #ffffff;
+    --black: #000000;
+    --transparent: transparent;
+    --blue-300: #93c5fd;
+    --blue-400: #60a5fa;
+    --blue-500: #3b82f6;
+    --indigo-300: #a5b4fc;
+    --violet-200: #ddd6fe;
   }
 
   .dark {
@@ -97,6 +106,18 @@
     }
   }
 
+  @keyframes aurora {
+    0% {
+      background-position: 50% 50%, 50% 50%;
+    }
+    50% {
+      background-position: 350% 50%, 350% 50%;
+    }
+    100% {
+      background-position: 50% 50%, 50% 50%;
+    }
+  }
+
   .animate-fade-in {
     animation: fade-in 0.6s ease-out forwards;
     opacity: 0;
@@ -113,5 +134,9 @@
 
   .animate-bounce-slow {
     animation: bounce-slow 2s ease-in-out infinite;
+  }
+
+  .animate-aurora {
+    animation: aurora 60s ease infinite;
   }
 }

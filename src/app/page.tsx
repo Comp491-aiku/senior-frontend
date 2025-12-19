@@ -13,11 +13,7 @@ import {
   Globe,
   Calendar,
   DollarSign,
-  MapPin,
-  Star,
-  Shield,
-  Lock,
-  Award
+  MapPin
 } from 'lucide-react'
 import { TypeWriter } from '@/components/TypeWriter'
 import { AnimatedCounter } from '@/components/AnimatedCounter'
@@ -25,6 +21,10 @@ import { FadeInSection } from '@/components/FadeInSection'
 import { ParallaxCard } from '@/components/ParallaxCard'
 import { TestimonialCard } from '@/components/TestimonialCard'
 import { DestinationCard } from '@/components/DestinationCard'
+import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
+import { GooeyText } from '@/components/ui/gooey-text-morphing'
+import DisplayCards from '@/components/ui/display-cards'
+import { Plane, Hotel, Clock } from 'lucide-react'
 
 export default function Home() {
   return (
@@ -237,6 +237,63 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Experience the Future - New Section with GooeyText and DisplayCards */}
+      <section className="py-20 md:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background -z-10" />
+        <div className="container">
+          <FadeInSection className="text-center mb-16">
+            <div className="h-[200px] flex items-center justify-center mb-8">
+              <GooeyText
+                texts={["Intelligent", "Seamless", "Personalized", "Effortless"]}
+                morphTime={1.2}
+                cooldownTime={0.3}
+                className="font-bold"
+                textClassName="text-4xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-600 to-pink-600"
+              />
+            </div>
+            <h2 className="text-2xl md:text-3xl text-muted-foreground max-w-2xl mx-auto">
+              Travel Planning Powered by Advanced AI
+            </h2>
+          </FadeInSection>
+
+          <FadeInSection delay={200}>
+            <div className="flex justify-center items-center min-h-[400px]">
+              <DisplayCards
+                cards={[
+                  {
+                    icon: <Plane className="size-4 text-blue-300" />,
+                    title: "Instant Planning",
+                    description: "AI plans your entire trip in minutes",
+                    date: "Save hours of research",
+                    titleClassName: "text-blue-500",
+                    className:
+                      "[grid-area:stack] hover:-translate-y-10 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
+                  },
+                  {
+                    icon: <Hotel className="size-4 text-purple-300" />,
+                    title: "Best Prices",
+                    description: "Compare thousands of options instantly",
+                    date: "Always get the best deal",
+                    titleClassName: "text-purple-500",
+                    className:
+                      "[grid-area:stack] translate-x-16 translate-y-10 hover:-translate-y-1 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
+                  },
+                  {
+                    icon: <Clock className="size-4 text-pink-300" />,
+                    title: "Real-time Updates",
+                    description: "Live pricing and availability tracking",
+                    date: "Never miss an opportunity",
+                    titleClassName: "text-pink-500",
+                    className:
+                      "[grid-area:stack] translate-x-32 translate-y-20 hover:translate-y-10",
+                  },
+                ]}
+              />
+            </div>
+          </FadeInSection>
+        </div>
+      </section>
+
       {/* Popular Destinations */}
       <section className="py-20 md:py-32 bg-muted/30">
         <div className="container">
@@ -249,7 +306,7 @@ export default function Home() {
             </p>
           </FadeInSection>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             <FadeInSection delay={100}>
               <DestinationCard
                 name="Paris"
@@ -299,58 +356,6 @@ export default function Home() {
                 description="The city that never sleeps offers endless entertainment, dining, and culture."
                 tags={['City', 'Shopping', 'Culture']}
                 gradient="from-blue-500 to-indigo-600"
-              />
-            </FadeInSection>
-
-            <FadeInSection delay={500}>
-              <DestinationCard
-                name="Dubai"
-                country="UAE"
-                image="/dubai.avif"
-                price="From $1,400"
-                duration="5-7 days"
-                description="Futuristic city with luxury shopping, ultramodern architecture, and desert adventures."
-                tags={['Luxury', 'Shopping', 'Desert']}
-                gradient="from-amber-500 to-orange-600"
-              />
-            </FadeInSection>
-
-            <FadeInSection delay={600}>
-              <DestinationCard
-                name="Santorini"
-                country="Greece"
-                image="/santorini.avif"
-                price="From $1,100"
-                duration="5-7 days"
-                description="Breathtaking sunsets, white-washed buildings, and crystal-clear Aegean waters."
-                tags={['Beach', 'Romance', 'Relax']}
-                gradient="from-cyan-500 to-blue-600"
-              />
-            </FadeInSection>
-
-            <FadeInSection delay={700}>
-              <DestinationCard
-                name="Iceland"
-                country="Iceland"
-                image="/iceland.avif"
-                price="From $2,000"
-                duration="7-10 days"
-                description="Land of fire and ice with glaciers, hot springs, and the Northern Lights."
-                tags={['Nature', 'Adventure', 'Unique']}
-                gradient="from-purple-500 to-violet-600"
-              />
-            </FadeInSection>
-
-            <FadeInSection delay={800}>
-              <DestinationCard
-                name="Maldives"
-                country="Maldives"
-                image="/maldives.avif"
-                price="From $2,500"
-                duration="5-7 days"
-                description="Overwater villas, pristine beaches, and world-class diving in paradise."
-                tags={['Beach', 'Luxury', 'Honeymoon']}
-                gradient="from-teal-500 to-cyan-600"
               />
             </FadeInSection>
           </div>
@@ -463,7 +468,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Grid */}
+      {/* Features Grid - BentoGrid Style */}
       <section className="py-20 bg-muted/30">
         <div className="container">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -471,83 +476,80 @@ export default function Home() {
               Powered by AI Agents
             </h2>
             <p className="text-xl text-muted-foreground">
-              5 specialized agents working in parallel to create your perfect trip
+              6 specialized agents working in parallel to create your perfect trip
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            <FadeInSection delay={100}>
-              <ParallaxCard intensity={5}>
-                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
-                  <Globe className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
-                  <h3 className="font-semibold mb-2">Orchestrator Agent</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Coordinates all agents, decides parallel vs sequential execution
-                  </p>
-                </Card>
-              </ParallaxCard>
-            </FadeInSection>
-
-            <FadeInSection delay={150}>
-              <ParallaxCard intensity={5}>
-                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
-                  <Calendar className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
-                  <h3 className="font-semibold mb-2">Flight Agent</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Searches thousands of flights, finds best prices and times
-                  </p>
-                </Card>
-              </ParallaxCard>
-            </FadeInSection>
-
-            <FadeInSection delay={200}>
-              <ParallaxCard intensity={5}>
-                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
-                  <MapPin className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
-                  <h3 className="font-semibold mb-2">Hotel Agent</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Finds perfect accommodations based on your preferences
-                  </p>
-                </Card>
-              </ParallaxCard>
-            </FadeInSection>
-
-            <FadeInSection delay={250}>
-              <ParallaxCard intensity={5}>
-                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
-                  <Sparkles className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
-                  <h3 className="font-semibold mb-2">Activity Agent</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Plans activities, restaurants, and experiences
-                  </p>
-                </Card>
-              </ParallaxCard>
-            </FadeInSection>
-
-            <FadeInSection delay={300}>
-              <ParallaxCard intensity={5}>
-                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
-                  <Zap className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
-                  <h3 className="font-semibold mb-2">Weather Agent</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Provides forecasts and suggests weather-appropriate activities
-                  </p>
-                </Card>
-              </ParallaxCard>
-            </FadeInSection>
-
-            <FadeInSection delay={350}>
-              <ParallaxCard intensity={5}>
-                <Card className="p-6 h-full hover:shadow-xl transition-shadow group">
-                  <DollarSign className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
-                  <h3 className="font-semibold mb-2">Budget Optimizer</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Ensures everything stays within your budget limits
-                  </p>
-                </Card>
-              </ParallaxCard>
-            </FadeInSection>
-          </div>
+          <FadeInSection>
+            <BentoGrid className="lg:grid-rows-3 max-w-6xl mx-auto">
+              <BentoCard
+                name="Orchestrator Agent"
+                className="lg:row-start-1 lg:row-end-4 lg:col-start-2 lg:col-end-3"
+                background={
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-purple-500/10 to-transparent" />
+                }
+                Icon={Globe}
+                description="Coordinates all agents, decides parallel vs sequential execution, and ensures optimal workflow"
+                href="/trip/plan"
+                cta="Start Planning"
+              />
+              <BentoCard
+                name="Flight Agent"
+                className="lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3"
+                background={
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent" />
+                }
+                Icon={Calendar}
+                description="Searches thousands of flights, finds best prices and times for your journey"
+                href="/trip/plan"
+                cta="Find Flights"
+              />
+              <BentoCard
+                name="Hotel Agent"
+                className="lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4"
+                background={
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-teal-500/10 to-transparent" />
+                }
+                Icon={MapPin}
+                description="Finds perfect accommodations based on your preferences and budget"
+                href="/trip/plan"
+                cta="Find Hotels"
+              />
+              <BentoCard
+                name="Activity Agent"
+                className="lg:col-start-3 lg:col-end-3 lg:row-start-1 lg:row-end-2"
+                background={
+                  <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 via-rose-500/10 to-transparent" />
+                }
+                Icon={Sparkles}
+                description="Plans activities, restaurants, and unique experiences"
+                href="/trip/plan"
+                cta="Discover Activities"
+              />
+              <BentoCard
+                name="Weather Agent"
+                className="lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-3"
+                background={
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-yellow-500/10 to-transparent" />
+                }
+                Icon={Zap}
+                description="Provides forecasts and suggests weather-appropriate activities"
+                href="/trip/plan"
+                cta="Check Weather"
+              />
+              <BentoCard
+                name="Budget Optimizer"
+                className="lg:col-start-3 lg:col-end-3 lg:row-start-3 lg:row-end-4"
+                background={
+                  <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-purple-500/10 to-transparent" />
+                }
+                Icon={DollarSign}
+                description="Ensures everything stays within your budget limits"
+                href="/trip/plan"
+                cta="Optimize Budget"
+              />
+            </BentoGrid>
+          </FadeInSection>
         </div>
       </section>
 
@@ -563,7 +565,7 @@ export default function Home() {
             </p>
           </FadeInSection>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <FadeInSection delay={100}>
               <TestimonialCard
                 name="Sarah Johnson"
@@ -596,39 +598,6 @@ export default function Home() {
                 trip="Tokyo, Japan"
               />
             </FadeInSection>
-
-            <FadeInSection delay={400}>
-              <TestimonialCard
-                name="David Park"
-                role="Photographer"
-                image="/testimonials/david.jpg"
-                rating={5}
-                text="Best travel planning tool ever. It suggested photography spots I'd never heard of and perfectly timed everything around golden hour. Absolutely brilliant!"
-                trip="Iceland"
-              />
-            </FadeInSection>
-
-            <FadeInSection delay={500}>
-              <TestimonialCard
-                name="Lisa Thompson"
-                role="Teacher"
-                image="/testimonials/lisa.jpg"
-                rating={5}
-                text="Planning a family trip with kids is usually stressful. AIKU found kid-friendly restaurants, activities, and even suggested the best times to visit attractions."
-                trip="Orlando, Florida"
-              />
-            </FadeInSection>
-
-            <FadeInSection delay={600}>
-              <TestimonialCard
-                name="James Wilson"
-                role="Entrepreneur"
-                image="/testimonials/james.jpg"
-                rating={5}
-                text="Used auto-pay mode and everything was booked while I focused on work. Trip was flawless. This is the future of travel planning!"
-                trip="Dubai, UAE"
-              />
-            </FadeInSection>
           </div>
 
           {/* Stats Row */}
@@ -658,89 +627,6 @@ export default function Home() {
                 </div>
                 <p className="text-sm text-muted-foreground">Average Rating</p>
               </div>
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      {/* Trust & Security Section */}
-      <section className="py-20">
-        <div className="container">
-          <FadeInSection>
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                  Your Trust is Our Priority
-                </h2>
-                <p className="text-muted-foreground">
-                  We partner with industry leaders to ensure your data and payments are secure
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-4 gap-8">
-                <FadeInSection delay={100}>
-                  <div className="text-center">
-                    <div className="mx-auto w-16 h-16 bg-green-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <Shield className="h-8 w-8 text-green-500" />
-                    </div>
-                    <h3 className="font-semibold mb-2">SSL Encrypted</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Bank-level encryption for all transactions
-                    </p>
-                  </div>
-                </FadeInSection>
-
-                <FadeInSection delay={200}>
-                  <div className="text-center">
-                    <div className="mx-auto w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <Lock className="h-8 w-8 text-blue-500" />
-                    </div>
-                    <h3 className="font-semibold mb-2">GDPR Compliant</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Your privacy is protected by law
-                    </p>
-                  </div>
-                </FadeInSection>
-
-                <FadeInSection delay={300}>
-                  <div className="text-center">
-                    <div className="mx-auto w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <Award className="h-8 w-8 text-purple-500" />
-                    </div>
-                    <h3 className="font-semibold mb-2">Industry Certified</h3>
-                    <p className="text-sm text-muted-foreground">
-                      SOC 2 Type II certified platform
-                    </p>
-                  </div>
-                </FadeInSection>
-
-                <FadeInSection delay={400}>
-                  <div className="text-center">
-                    <div className="mx-auto w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <CheckCircle2 className="h-8 w-8 text-orange-500" />
-                    </div>
-                    <h3 className="font-semibold mb-2">Verified Partners</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Only trusted travel providers
-                    </p>
-                  </div>
-                </FadeInSection>
-              </div>
-
-              {/* Partner Logos */}
-              <FadeInSection delay={500} className="mt-16">
-                <div className="border-t pt-12">
-                  <p className="text-center text-sm text-muted-foreground mb-8">
-                    Trusted by leading travel platforms
-                  </p>
-                  <div className="flex flex-wrap items-center justify-center gap-12 opacity-50 grayscale">
-                    <div className="text-2xl font-bold">Google Maps</div>
-                    <div className="text-2xl font-bold">Stripe</div>
-                    <div className="text-2xl font-bold">Amadeus</div>
-                    <div className="text-2xl font-bold">Booking.com</div>
-                  </div>
-                </div>
-              </FadeInSection>
             </div>
           </FadeInSection>
         </div>
