@@ -109,8 +109,8 @@ export default function Home() {
                       <div className="flex-1">
                         <div className="bg-muted rounded-2xl rounded-tl-none p-4 hover:scale-[1.02] transition-transform">
                           <p className="text-sm">
-                            "I want to visit Paris for 5 days in December with my partner.
-                            Budget around $3000. We love museums and good food."
+                            &quot;I want to visit Paris for 5 days in December with my partner.
+                            Budget around $3000. We love museums and good food.&quot;
                           </p>
                         </div>
                         <p className="text-xs text-muted-foreground mt-1 ml-1">You</p>
@@ -123,7 +123,7 @@ export default function Home() {
                       </div>
                       <div className="flex-1">
                         <div className="bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-2xl rounded-tl-none p-4 border border-primary/20 hover:scale-[1.02] transition-transform">
-                          <p className="text-sm font-medium mb-2">Perfect! I'm planning your Paris trip...</p>
+                          <p className="text-sm font-medium mb-2">Perfect! I&apos;m planning your Paris trip...</p>
                           <div className="space-y-1 text-xs text-muted-foreground">
                             <div className="flex items-center gap-2">
                               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -190,8 +190,8 @@ export default function Home() {
                     </div>
                     <h3 className="text-xl font-bold mb-3">1. Tell Us Your Dream</h3>
                     <p className="text-muted-foreground">
-                      Talk or type naturally. "I want a beach vacation in Thailand" or
-                      "Weekend trip to New York for shopping"
+                      Talk or type naturally. &quot;I want a beach vacation in Thailand&quot; or
+                      &quot;Weekend trip to New York for shopping&quot;
                     </p>
                   </div>
                 </Card>

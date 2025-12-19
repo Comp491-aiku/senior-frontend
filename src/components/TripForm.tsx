@@ -40,7 +40,7 @@ export function TripForm({ onSubmit, initialData, isLoading }: TripFormProps) {
       <CardHeader>
         <CardTitle>Plan Your Trip</CardTitle>
         <CardDescription>
-          Tell us about your dream destination and we'll create a personalized itinerary
+          Tell us about your dream destination and we&apos;ll create a personalized itinerary
         </CardDescription>
       </CardHeader>
       <CardContent>

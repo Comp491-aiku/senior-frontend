@@ -341,7 +341,7 @@ export function AlternativeFinderModal({
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Ready to Find Alternatives?</h3>
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                  Choose your preferred price range and click "Search Alternatives" to discover amazing options
+                  Choose your preferred price range and click &quot;Search Alternatives&quot; to discover amazing options
                 </p>
               </div>
             )}

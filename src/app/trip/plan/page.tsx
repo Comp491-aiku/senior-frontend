@@ -15,8 +15,6 @@ import { AnimatedTravelChat } from '@/components/AnimatedTravelChat'
 import { TravelAgentTaskPanel } from '@/components/TravelAgentTaskPanel'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert } from '@/components/ui/alert'
 import { AgentActivity } from '@/types'
 import { motion } from 'framer-motion'
@@ -28,19 +26,8 @@ import {
   Loader2,
   User,
   Zap,
-  Plane,
-  MapPin,
-  Calendar,
-  DollarSign,
-  CheckCircle2,
   Clock,
-  Settings,
-  Hotel,
-  CloudRain,
   Share2,
-  Search,
-  ThumbsUp,
-  RefreshCw,
   Layers,
 } from 'lucide-react'
 
@@ -53,13 +40,11 @@ type Message = {
   suggestions?: string[]
 }
 
-type PlanningMode = 'plan' | 'auto-pay' | 'edit'
-
 type ViewMode = 'stages' | 'timeline'
 
 export default function TripPlanPage() {
   const router = useRouter()
-  const { isAuthenticated, loading: authLoading, user } = useAuth()
+  const { isAuthenticated, loading: authLoading } = useAuth()
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -77,7 +62,6 @@ export default function TripPlanPage() {
 
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [mode, setMode] = useState<PlanningMode>('plan')
   const [viewMode, setViewMode] = useState<ViewMode>('timeline')
   const [showAgentActivity, setShowAgentActivity] = useState(false)
   const [currentAgentActivity, setCurrentAgentActivity] = useState<AgentActivity[]>([])
@@ -129,7 +113,7 @@ export default function TripPlanPage() {
     try {
       const response = await chatService.sendMessage({
         message: messageText,
-        planning_mode: mode,
+        planning_mode: 'plan',
         trip_id: tripId,
       })
 
@@ -163,16 +147,6 @@ export default function TripPlanPage() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  const getAgentIcon = (agentName: string) => {
-    const name = agentName.toLowerCase()
-    if (name.includes('flight')) return Plane
-    if (name.includes('hotel') || name.includes('accommodation')) return Hotel
-    if (name.includes('activity')) return Calendar
-    if (name.includes('weather')) return CloudRain
-    if (name.includes('orchestrator')) return Zap
-    return Settings
   }
 
   const handleVoiceTranscript = (transcript: string) => {
@@ -243,7 +217,7 @@ export default function TripPlanPage() {
             try {
               const response = await chatService.sendMessage({
                 message: message,
-                planning_mode: mode,
+                planning_mode: 'plan',
                 trip_id: tripId,
               })
 
@@ -316,69 +290,15 @@ export default function TripPlanPage() {
               </>
             )}
 
-            <Tabs value={mode} onValueChange={(v) => setMode(v as PlanningMode)}>
-              <TabsList>
-                <TabsTrigger value="plan" className="gap-2">
-                  <Settings className="h-4 w-4" />
-                  Plan
-                </TabsTrigger>
-                <TabsTrigger value="auto-pay" className="gap-2">
-                  <Zap className="h-4 w-4" />
-                  Auto-Pay
-                </TabsTrigger>
-                <TabsTrigger value="edit" className="gap-2">
-                  <RefreshCw className="h-4 w-4" />
-                  Edit
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
           </div>
         </div>
       )}
 
-      {/* Show chat interface only after first message */}
-      {messages.length > 1 && (
-        <>
-          {/* Error Alert */}
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              {error}
-            </Alert>
-          )}
-
-          {/* Mode Description */}
-          <Card className="mb-4 p-3 bg-muted/50">
-            <div className="flex items-center gap-2 text-sm">
-              {mode === 'plan' && (
-                <>
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span>
-                    <strong>Plan Mode:</strong> Get recommendations, edit freely, no commitments.
-                    Share with friends!
-                  </span>
-                </>
-              )}
-              {mode === 'auto-pay' && (
-                <>
-                  <Zap className="h-4 w-4 text-primary" />
-                  <span>
-                    <strong>Auto-Pay Mode:</strong> AI will automatically book everything for you.
-                    Fastest way to travel!
-                  </span>
-                </>
-              )}
-              {mode === 'edit' && (
-                <>
-                  <Settings className="h-4 w-4 text-primary" />
-                  <span>
-                    <strong>Edit Mode:</strong> Modify existing plans, find alternatives, replace
-                    items.
-                  </span>
-                </>
-              )}
-            </div>
-          </Card>
-        </>
+      {/* Error Alert */}
+      {messages.length > 1 && error && (
+        <Alert variant="destructive" className="mb-4">
+          {error}
+        </Alert>
       )}
 
       <div className={`flex-1 ${messages.length > 1 ? 'grid lg:grid-cols-3 gap-4' : ''} min-h-0`}>

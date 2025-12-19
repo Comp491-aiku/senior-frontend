@@ -268,7 +268,7 @@ export function TravelAgentTaskPanel() {
       opacity: 1,
       y: 0,
       transition: {
-        type: prefersReducedMotion ? 'tween' : 'spring',
+        type: prefersReducedMotion ? 'tween' as const : 'spring' as const,
         stiffness: 500,
         damping: 30,
         duration: prefersReducedMotion ? 0.2 : undefined,
@@ -286,7 +286,7 @@ export function TravelAgentTaskPanel() {
         duration: 0.25,
         staggerChildren: prefersReducedMotion ? 0 : 0.05,
         when: 'beforeChildren' as const,
-        ease: [0.2, 0.65, 0.3, 0.9],
+        ease: [0.2, 0.65, 0.3, 0.9] as [number, number, number, number],
       },
     },
   }
@@ -297,7 +297,7 @@ export function TravelAgentTaskPanel() {
       opacity: 1,
       x: 0,
       transition: {
-        type: prefersReducedMotion ? 'tween' : 'spring',
+        type: prefersReducedMotion ? 'tween' as const : 'spring' as const,
         stiffness: 500,
         damping: 25,
         duration: prefersReducedMotion ? 0.2 : undefined,
@@ -311,7 +311,7 @@ export function TravelAgentTaskPanel() {
       opacity: 1,
       height: 'auto' as const,
       overflow: 'visible' as const,
-      transition: { duration: 0.25, ease: [0.2, 0.65, 0.3, 0.9] },
+      transition: { duration: 0.25, ease: [0.2, 0.65, 0.3, 0.9] as [number, number, number, number] },
     },
   }
 

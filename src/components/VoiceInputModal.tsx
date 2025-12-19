@@ -86,7 +86,7 @@ export function VoiceInputModal({
                 Voice Input Not Supported
               </h3>
               <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-                Your browser doesn't support voice input. Please use a modern browser like{' '}
+                Your browser doesn&apos;t support voice input. Please use a modern browser like{' '}
                 <strong className="text-foreground">Chrome</strong>,{' '}
                 <strong className="text-foreground">Edge</strong>, or{' '}
                 <strong className="text-foreground">Safari</strong> for the best experience.
@@ -181,7 +181,7 @@ export function VoiceInputModal({
                   <span className="text-sm font-semibold text-red-600 dark:text-red-400 block">
                     Listening...
                   </span>
-                  <p className="text-xs text-muted-foreground">Speak naturally, I'm here</p>
+                  <p className="text-xs text-muted-foreground">Speak naturally, I&apos;m here</p>
                 </div>
               </div>
             ) : (
@@ -261,7 +261,7 @@ export function VoiceInputModal({
               <span className="text-2xl">💡</span>{' '}
               <strong className="text-foreground">Pro Tips:</strong> Speak clearly and naturally.
               The system captures your speech in real-time. You can pause and continue - just keep
-              speaking! Click "Use Text" when you're done.
+              speaking! Click &quot;Use Text&quot; when you&apos;re done.
             </p>
           </div>
         </Card>

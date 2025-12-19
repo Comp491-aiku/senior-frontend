@@ -22,7 +22,7 @@ export default function AboutPage() {
           </CardHeader>
           <CardContent className="prose prose-lg max-w-none">
             <p className="text-muted-foreground">
-              AIKU was born from a simple frustration: planning the perfect trip shouldn't take weeks of
+              AIKU was born from a simple frustration: planning the perfect trip shouldn&apos;t take weeks of
               research and countless hours of spreadsheet work. We believed there had to be a better way.
             </p>
             <p className="text-muted-foreground mt-4">
@@ -46,7 +46,7 @@ export default function AboutPage() {
                 <Users className="h-12 w-12 text-primary mb-4" />
                 <CardTitle>User-Centric</CardTitle>
                 <CardDescription>
-                  Every feature we build starts with understanding our users' needs and pain points
+                  Every feature we build starts with understanding our users&apos; needs and pain points
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -66,7 +66,7 @@ export default function AboutPage() {
                 <Heart className="h-12 w-12 text-primary mb-4" />
                 <CardTitle>Passion for Travel</CardTitle>
                 <CardDescription>
-                  We're travelers ourselves, and we pour our love for exploration into every feature
+                  We&apos;re travelers ourselves, and we pour our love for exploration into every feature
                 </CardDescription>
               </CardHeader>
             </Card>
