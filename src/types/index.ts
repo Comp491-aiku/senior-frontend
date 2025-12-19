@@ -214,3 +214,17 @@ export interface TripStore {
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
 }
+
+// Agent Activity Types
+export interface AgentActivity {
+  agent: string
+  status: 'started' | 'completed' | 'error'
+  message: string
+  progress: number
+  data?: Record<string, any>
+}
+
+export interface AgentActivityExtended extends AgentActivity {
+  timestamp?: Date
+  duration?: number
+}
