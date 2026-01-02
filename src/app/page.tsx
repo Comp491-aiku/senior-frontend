@@ -62,8 +62,8 @@ export default function LandingPage() {
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-zinc-300" />
             </div>
             <span className="text-xl font-bold">AIKU</span>
           </Link>
@@ -100,8 +100,8 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/50 via-transparent to-transparent" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-zinc-800/30 rounded-full blur-3xl" />
 
         <div className="container mx-auto px-4 relative">
           <motion.div
@@ -110,14 +110,14 @@ export default function LandingPage() {
             transition={{ duration: 0.6 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-800/50 text-zinc-300 text-sm mb-6">
               <Zap className="w-4 h-4" />
               <span>Powered by Advanced AI</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
               Plan Your Perfect Trip
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-cyan-500">
+              <span className="block text-zinc-400">
                 with AI Intelligence
               </span>
             </h1>
@@ -144,15 +144,15 @@ export default function LandingPage() {
             {/* Trust indicators */}
             <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <CheckCircle2 className="h-4 w-4 text-zinc-400" />
                 <span>No credit card required</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <CheckCircle2 className="h-4 w-4 text-zinc-400" />
                 <span>Free to plan</span>
               </div>
               <div className="flex items-center gap-2">
-                <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                <Star className="h-4 w-4 text-zinc-400 fill-zinc-400" />
                 <span>4.9/5 rating</span>
               </div>
             </div>
@@ -168,9 +168,9 @@ export default function LandingPage() {
             <Card className="overflow-hidden border-border/50 bg-card/50 backdrop-blur-xl shadow-2xl">
               <div className="p-4 border-b border-border flex items-center gap-3">
                 <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                  <div className="w-3 h-3 rounded-full bg-zinc-600" />
+                  <div className="w-3 h-3 rounded-full bg-zinc-500" />
+                  <div className="w-3 h-3 rounded-full bg-zinc-400" />
                 </div>
                 <span className="text-sm text-muted-foreground">AIKU Chat</span>
               </div>
@@ -184,10 +184,10 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-4 h-4 text-white" />
+                  <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-4 h-4 text-zinc-300" />
                   </div>
-                  <div className="bg-primary/10 rounded-2xl rounded-tl-none px-4 py-3 max-w-md">
+                  <div className="bg-zinc-800/50 rounded-2xl rounded-tl-none px-4 py-3 max-w-md">
                     <p className="mb-3">I&apos;d love to help you plan your Paris trip! Let me search for the best options...</p>
                     <div className="flex flex-wrap gap-2 text-xs">
                       <span className="px-2 py-1 bg-background/50 rounded flex items-center gap-1">
@@ -234,9 +234,9 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="p-6 h-full hover:border-primary/50 transition-colors group">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                    <feature.icon className="w-6 h-6 text-primary" />
+                <Card className="p-6 h-full hover:border-zinc-600 transition-colors group">
+                  <div className="w-12 h-12 rounded-xl bg-zinc-800/50 flex items-center justify-center mb-4 group-hover:bg-zinc-700/50 transition-colors">
+                    <feature.icon className="w-6 h-6 text-zinc-300" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                   <p className="text-muted-foreground">{feature.description}</p>
@@ -293,7 +293,7 @@ export default function LandingPage() {
                 transition={{ delay: index * 0.2 }}
                 className="text-center"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-purple-600 text-white text-2xl font-bold mb-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-zinc-700 text-zinc-200 text-2xl font-bold mb-6">
                   {step.step}
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
@@ -305,7 +305,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-b from-primary/5 to-transparent">
+      <section className="py-24 bg-gradient-to-b from-zinc-900/30 to-transparent">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -334,8 +334,8 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-zinc-300" />
               </div>
               <span className="text-xl font-bold">AIKU</span>
             </div>
