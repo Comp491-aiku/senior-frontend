@@ -2,14 +2,13 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
-import { Header } from '@/components/Header'
-import { Footer } from '@/components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'AIKU - AI Travel Planner',
-  description: 'Plan your perfect trip with AI-powered itinerary generation',
+  description: 'Plan your perfect trip with AI-powered intelligence. Search flights, hotels, activities and more.',
+  keywords: ['travel', 'AI', 'trip planner', 'flights', 'hotels', 'vacation'],
 }
 
 export default function RootLayout({
@@ -18,14 +17,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} antialiased`}>
         <Providers>
-          <div className="min-h-screen bg-background flex flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+          {children}
         </Providers>
       </body>
     </html>
