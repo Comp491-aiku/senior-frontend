@@ -188,16 +188,26 @@ function transformHotel(item: Record<string, unknown>): HotelData | null {
   // Get price from offer or direct price field
   const price = offerPrice || (item.price as Record<string, unknown> | undefined)
 
+  // Get hotel name and city for fallback URL
+  const hotelName = String(hotelData.name || item.name || 'Unknown Hotel')
+  const cityName = String(address?.city_name || hotelData.city || '')
+
+  // Generate fallback Booking.com search URL if no booking_url provided
+  const generateFallbackBookingUrl = () => {
+    const searchQuery = encodeURIComponent(`${hotelName} ${cityName}`.trim())
+    return `https://www.booking.com/searchresults.html?ss=${searchQuery}`
+  }
+
   return {
     id: String(hotelData.hotel_id || hotelData.id || item.id || ''),
-    name: String(hotelData.name || item.name || 'Unknown Hotel'),
+    name: hotelName,
     image: hotelData.image ? String(hotelData.image) : undefined,
     rating: Number(hotelData.rating || hotelData.stars || item.rating || 4),
     review_score: hotelData.review_score ? Number(hotelData.review_score) : undefined,
     location: {
       address: address?.city_name ? String(address.city_name) :
                geoCode ? `${geoCode.latitude?.toFixed(4)}, ${geoCode.longitude?.toFixed(4)}` : '',
-      city: String(address?.city_name || hotelData.city || 'Paris'),
+      city: cityName || 'Paris',
       distance_to_center: hotelData.distance_to_center ? String(hotelData.distance_to_center) : undefined,
     },
     price: {
@@ -207,7 +217,7 @@ function transformHotel(item: Record<string, unknown>): HotelData | null {
     },
     room_type: firstOffer?.room ? String((firstOffer.room as Record<string, unknown>).type || '') : undefined,
     cancellation: offerPrice ? undefined : undefined,
-    booking_url: bookingLinks?.booking || bookingLinks?.hotels_com || (item.booking_url as string | undefined),
+    booking_url: bookingLinks?.booking_com || bookingLinks?.google_hotels || bookingLinks?.trivago || (item.booking_url as string | undefined) || generateFallbackBookingUrl(),
   }
 }
 
