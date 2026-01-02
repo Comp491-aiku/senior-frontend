@@ -27,6 +27,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { api, Message, streamChat, StreamEvent } from '@/lib/api'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 // Tool icon mapping
 const toolIcons: Record<string, React.ReactNode> = {
@@ -321,7 +323,11 @@ export default function ChatPage() {
                       </div>
                     )}
 
-                    <p className="whitespace-pre-wrap">{message.content}</p>
+                    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {message.content}
+                      </ReactMarkdown>
+                    </div>
                   </div>
 
                   {message.role === 'user' && (
@@ -376,7 +382,11 @@ export default function ChatPage() {
                     )}
 
                     {streamingContent ? (
-                      <p className="whitespace-pre-wrap">{streamingContent}</p>
+                      <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {streamingContent}
+                        </ReactMarkdown>
+                      </div>
                     ) : (
                       <div className="flex items-center gap-1">
                         <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
