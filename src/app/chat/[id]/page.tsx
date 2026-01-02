@@ -770,8 +770,8 @@ export default function ChatPage() {
                     )}
                   >
                     {message.role === 'assistant' && (
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0">
-                        <Sparkles className="w-4 h-4 text-white" />
+                      <div className="w-8 h-8 rounded-lg bg-zinc-700 flex items-center justify-center flex-shrink-0">
+                        <Sparkles className="w-4 h-4 text-zinc-300" />
                       </div>
                     )}
 
@@ -789,7 +789,7 @@ export default function ChatPage() {
                         {message.toolCalls.map((tc, idx) => (
                           <Collapsible key={idx}>
                             <div className="flex items-center gap-2 text-xs bg-background/50 rounded-lg px-3 py-2">
-                              <CheckCircle2 className="w-4 h-4 text-green-500" />
+                              <CheckCircle2 className="w-4 h-4 text-zinc-400" />
                               {getToolIcon(tc.name)}
                               <div className="flex-1">
                                 <span className="font-medium">{formatToolName(tc.name)}</span>
@@ -853,10 +853,10 @@ export default function ChatPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="w-full"
                       >
-                        <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl p-4">
-                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                        <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-xl p-4">
+                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-zinc-300">
                             <Plane className="w-4 h-4" />
-                            ✈️ Flights Found ({message.travelData.flights.length})
+                            Flights Found ({message.travelData.flights.length})
                           </h4>
                           <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 scrollbar-thin">
                             {message.travelData.flights.map((flight, idx) => (
