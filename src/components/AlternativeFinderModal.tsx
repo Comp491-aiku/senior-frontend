@@ -139,11 +139,11 @@ export function AlternativeFinderModal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with gradient */}
-          <div className="p-6 border-b bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
+          <div className="p-6 border-b bg-zinc-900/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/20 transform hover:scale-105 transition-transform">
-                  <Icon className="h-7 w-7 text-primary-foreground" />
+                <div className="w-14 h-14 rounded-2xl bg-zinc-700 flex items-center justify-center shadow-lg shadow-black/20 transform hover:scale-105 transition-transform">
+                  <Icon className="h-7 w-7 text-zinc-300" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
@@ -168,31 +168,31 @@ export function AlternativeFinderModal({
           </div>
 
           {/* Filters with modern styling */}
-          <div className="p-6 border-b bg-gradient-to-b from-background to-muted/20">
+          <div className="p-6 border-b bg-zinc-900/30">
             <div className="space-y-5">
               <div>
                 <Label className="mb-3 block text-sm font-semibold text-foreground/90">
                   Price Range
                 </Label>
-                <Tabs value={priceRange} onValueChange={(v) => setPriceRange(v as any)}>
+                <Tabs value={priceRange} onValueChange={(v) => setPriceRange(v as 'cheaper' | 'similar' | 'premium')}>
                   <TabsList className="grid w-full grid-cols-3 p-1 bg-muted/50 backdrop-blur-sm">
                     <TabsTrigger
                       value="cheaper"
-                      className="gap-2 data-[state=active]:bg-green-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all"
+                      className="gap-2 data-[state=active]:bg-zinc-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all"
                     >
                       <TrendingDown className="h-4 w-4" />
                       Cheaper
                     </TabsTrigger>
                     <TabsTrigger
                       value="similar"
-                      className="gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all"
+                      className="gap-2 data-[state=active]:bg-zinc-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all"
                     >
                       <DollarSign className="h-4 w-4" />
                       Similar
                     </TabsTrigger>
                     <TabsTrigger
                       value="premium"
-                      className="gap-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all"
+                      className="gap-2 data-[state=active]:bg-zinc-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all"
                     >
                       <TrendingUp className="h-4 w-4" />
                       Premium
@@ -203,7 +203,7 @@ export function AlternativeFinderModal({
 
               <Button
                 onClick={handleSearch}
-                className="w-full h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] bg-gradient-to-r from-primary to-primary/80"
+                className="w-full h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] bg-zinc-700 hover:bg-zinc-600"
                 disabled={loading}
               >
                 {loading ? (
@@ -226,8 +226,8 @@ export function AlternativeFinderModal({
             {loading ? (
               <div className="text-center py-16">
                 <div className="relative inline-flex">
-                  <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
-                  <div className="absolute inset-0 h-12 w-12 animate-ping rounded-full border-4 border-primary/20" />
+                  <div className="h-12 w-12 animate-spin rounded-full border-4 border-zinc-700 border-t-zinc-400" />
+                  <div className="absolute inset-0 h-12 w-12 animate-ping rounded-full border-4 border-zinc-700/20" />
                 </div>
                 <p className="mt-6 text-base font-medium text-muted-foreground">
                   Finding best alternatives...
@@ -243,14 +243,14 @@ export function AlternativeFinderModal({
                     key={alt.id}
                     className={`group relative overflow-hidden p-5 hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 ${
                       alt.isRecommended
-                        ? 'border-primary bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5'
-                        : 'hover:border-primary/50'
+                        ? 'border-zinc-500 bg-zinc-800/30'
+                        : 'hover:border-zinc-600'
                     }`}
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     {/* Recommended badge with glow */}
                     {alt.isRecommended && (
-                      <Badge className="mb-3 gap-1.5 bg-gradient-to-r from-primary to-primary/80 shadow-lg shadow-primary/30 animate-pulse">
+                      <Badge className="mb-3 gap-1.5 bg-zinc-600 shadow-lg shadow-black/30">
                         <Sparkles className="h-3.5 w-3.5" />
                         AI Recommended
                       </Badge>
@@ -258,7 +258,7 @@ export function AlternativeFinderModal({
 
                     <div className="flex items-start justify-between gap-6">
                       <div className="flex-1 space-y-3">
-                        <h3 className="font-bold text-xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/70 transition-all">
+                        <h3 className="font-bold text-xl text-foreground group-hover:text-zinc-300 transition-all">
                           {alt.name}
                         </h3>
                         <p className="text-sm text-muted-foreground leading-relaxed">
@@ -274,7 +274,7 @@ export function AlternativeFinderModal({
                                   key={i}
                                   className={`h-4 w-4 ${
                                     i < Math.floor(alt.rating!)
-                                      ? 'fill-yellow-400 text-yellow-400'
+                                      ? 'fill-zinc-400 text-zinc-400'
                                       : 'fill-muted text-muted'
                                   }`}
                                 />
@@ -291,7 +291,7 @@ export function AlternativeFinderModal({
                             <Badge
                               key={idx}
                               variant="secondary"
-                              className="text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                              className="text-xs font-medium bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-colors"
                             >
                               {feature}
                             </Badge>
@@ -302,15 +302,15 @@ export function AlternativeFinderModal({
                       {/* Price & Action - Redesigned */}
                       <div className="text-right flex flex-col items-end gap-3">
                         <div>
-                          <div className="text-4xl font-bold bg-gradient-to-br from-primary via-primary to-primary/80 bg-clip-text text-transparent">
+                          <div className="text-4xl font-bold text-zinc-200">
                             ${alt.price}
                           </div>
                           <div className="text-xs text-muted-foreground mt-1">per person</div>
                         </div>
 
                         {alt.savings && (
-                          <div className="px-3 py-1.5 rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20">
-                            <div className="text-sm font-bold text-green-600 dark:text-green-500">
+                          <div className="px-3 py-1.5 rounded-full bg-zinc-800/50 border border-zinc-700">
+                            <div className="text-sm font-bold text-zinc-300">
                               Save ${alt.savings}
                             </div>
                           </div>
@@ -321,7 +321,7 @@ export function AlternativeFinderModal({
                             onSelectAlternative(alt)
                             onClose()
                           }}
-                          className="w-full min-w-[120px] shadow-lg hover:shadow-xl transition-all hover:scale-105 bg-gradient-to-r from-primary to-primary/90"
+                          className="w-full min-w-[120px] shadow-lg hover:shadow-xl transition-all hover:scale-105 bg-zinc-700 hover:bg-zinc-600"
                         >
                           <Check className="h-4 w-4 mr-1.5" />
                           Select

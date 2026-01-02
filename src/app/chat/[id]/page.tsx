@@ -405,7 +405,7 @@ export default function ChatPage() {
 
   // Load more messages (older messages)
   const loadMoreMessages = async () => {
-    if (isLoadingMore || !hasMore) return
+    if (isLoadingMore || !hasMore || !conversationId) return
 
     setIsLoadingMore(true)
     try {
