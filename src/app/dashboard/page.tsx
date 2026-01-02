@@ -47,10 +47,12 @@ export default function DashboardPage() {
   const loadConversations = async () => {
     try {
       const data = await api.getConversations()
-      setConversations(data)
+      // Ensure we always have an array
+      setConversations(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Failed to load conversations:', error)
       toast.error('Failed to load conversations')
+      setConversations([])
     } finally {
       setIsLoading(false)
     }

@@ -87,14 +87,28 @@ export interface StreamEvent {
   }
 }
 
+// API response types
+interface ConversationsResponse {
+  conversations: Conversation[]
+  total?: number
+}
+
 // API Functions
 export const api = {
   // Health
   health: () => apiFetch<{ status: string }>('/health', { skipAuth: true }),
 
   // Conversations
-  getConversations: (limit = 50, offset = 0) =>
-    apiFetch<Conversation[]>(`/api/v1/conversations?limit=${limit}&offset=${offset}`),
+  getConversations: async (limit = 50, offset = 0): Promise<Conversation[]> => {
+    const response = await apiFetch<Conversation[] | ConversationsResponse>(
+      `/api/v1/conversations?limit=${limit}&offset=${offset}`
+    )
+    // Handle both array and object responses
+    if (Array.isArray(response)) {
+      return response
+    }
+    return response.conversations || []
+  },
 
   getConversation: (id: string) =>
     apiFetch<Conversation>(`/api/v1/conversations/${id}`),
