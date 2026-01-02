@@ -28,6 +28,7 @@ export interface ActivityData {
   group_size?: string
   availability?: string
   cancellation?: string
+  booking_url?: string
 }
 
 interface ActivityCardProps {
@@ -127,10 +128,25 @@ export function ActivityCard({ activity, onSelect, selected }: ActivityCardProps
 
         {/* Action Bar - minimal */}
         <div className="px-2 py-1 bg-muted/50 border-t border-border">
-          <Button size="sm" variant="ghost" className="w-full h-6 text-[10px] gap-0.5">
-            Book Now
-            <ArrowRight className="w-2.5 h-2.5" />
-          </Button>
+          {activity.booking_url ? (
+            <Button
+              size="sm"
+              variant="ghost"
+              className="w-full h-6 text-[10px] gap-0.5"
+              onClick={(e) => {
+                e.stopPropagation()
+                window.open(activity.booking_url, '_blank', 'noopener,noreferrer')
+              }}
+            >
+              Book Now
+              <ArrowRight className="w-2.5 h-2.5" />
+            </Button>
+          ) : (
+            <Button size="sm" variant="ghost" className="w-full h-6 text-[10px] gap-0.5">
+              View Details
+              <ArrowRight className="w-2.5 h-2.5" />
+            </Button>
+          )}
         </div>
       </Card>
     </motion.div>

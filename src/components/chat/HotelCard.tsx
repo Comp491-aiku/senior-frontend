@@ -28,6 +28,7 @@ export interface HotelData {
   room_type?: string
   cancellation?: string
   breakfast_included?: boolean
+  booking_url?: string
 }
 
 interface HotelCardProps {
@@ -125,10 +126,25 @@ export function HotelCard({ hotel, onSelect, selected }: HotelCardProps) {
 
         {/* Action Bar - minimal */}
         <div className="px-2.5 py-1.5 bg-muted/50 border-t border-border">
-          <Button size="sm" variant="ghost" className="w-full h-7 text-xs gap-1">
-            View Details
-            <ArrowRight className="w-3 h-3" />
-          </Button>
+          {hotel.booking_url ? (
+            <Button
+              size="sm"
+              variant="ghost"
+              className="w-full h-7 text-xs gap-1"
+              onClick={(e) => {
+                e.stopPropagation()
+                window.open(hotel.booking_url, '_blank', 'noopener,noreferrer')
+              }}
+            >
+              Book Now
+              <ArrowRight className="w-3 h-3" />
+            </Button>
+          ) : (
+            <Button size="sm" variant="ghost" className="w-full h-7 text-xs gap-1">
+              View Details
+              <ArrowRight className="w-3 h-3" />
+            </Button>
+          )}
         </div>
       </Card>
     </motion.div>

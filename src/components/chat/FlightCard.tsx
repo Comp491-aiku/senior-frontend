@@ -33,6 +33,7 @@ export interface FlightData {
   cabin_class: string
   amenities?: string[]
   available_seats?: number
+  booking_url?: string
 }
 
 interface FlightCardProps {
@@ -163,10 +164,25 @@ export function FlightCard({ flight, onSelect, selected }: FlightCardProps) {
                 </div>
               )}
             </div>
-            <Button size="sm" variant="ghost" className="gap-1">
-              Select
-              <ArrowRight className="w-3 h-3" />
-            </Button>
+            {flight.booking_url ? (
+              <Button
+                size="sm"
+                variant="ghost"
+                className="gap-1"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  window.open(flight.booking_url, '_blank', 'noopener,noreferrer')
+                }}
+              >
+                Book Now
+                <ArrowRight className="w-3 h-3" />
+              </Button>
+            ) : (
+              <Button size="sm" variant="ghost" className="gap-1">
+                Select
+                <ArrowRight className="w-3 h-3" />
+              </Button>
+            )}
           </div>
         </div>
       </Card>

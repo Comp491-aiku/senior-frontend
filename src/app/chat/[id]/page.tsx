@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -44,6 +44,7 @@ function transformActivity(item: Record<string, unknown>): ActivityData | null {
   const pictures = item.pictures as string[] | undefined
   const price = item.price as { amount?: number; currency?: string } | undefined
   const geoCode = item.geo_code as { latitude?: number; longitude?: number } | undefined
+  const bookingLinks = item.booking_links as Record<string, string> | undefined
 
   return {
     id: String(item.id || ''),
@@ -60,6 +61,7 @@ function transformActivity(item: Record<string, unknown>): ActivityData | null {
       currency: price?.currency || 'EUR',
     },
     category: item.type ? String(item.type) : undefined,
+    booking_url: bookingLinks?.viator || bookingLinks?.getyourguide || (item.booking_url as string | undefined) || (item.booking_link as string | undefined),
   }
 }
 
@@ -131,6 +133,10 @@ function transformFlight(item: Record<string, unknown>): FlightData | null {
   // Get duration from itinerary or item
   const duration = String(outboundItinerary?.duration || item.duration || item.total_duration || firstSegment?.duration || '')
 
+  // Get booking links - prefer skyscanner, then google_flights
+  const bookingLinks = item.booking_links as Record<string, string> | undefined
+  const bookingUrl = bookingLinks?.skyscanner || bookingLinks?.google_flights || (item.booking_url as string | undefined)
+
   return {
     id: String(item.id || item.flight_id || `flight-${Date.now()}`),
     airline: String(carrier?.name || carrierName || item.airline || item.validating_carrier || 'Unknown Airline'),
@@ -153,6 +159,7 @@ function transformFlight(item: Record<string, unknown>): FlightData | null {
     price: price,
     cabin_class: String(item.cabin_class || item.cabin || 'Economy'),
     amenities: item.amenities as string[] | undefined,
+    booking_url: bookingUrl,
   }
 }
 
@@ -192,6 +199,7 @@ function transformHotel(item: Record<string, unknown>): HotelData | null {
     },
     room_type: firstOffer?.room ? String((firstOffer.room as Record<string, unknown>).type || '') : undefined,
     cancellation: offerPrice ? undefined : undefined,
+    booking_url: bookingLinks?.booking || bookingLinks?.hotels_com || (item.booking_url as string | undefined),
   }
 }
 
@@ -282,27 +290,88 @@ export default function ChatPage() {
     return () => clearTimeout(timer)
   }, [messages.length, streamingContent])
 
-  // Sanitize message to prevent freezing from large content
-  const sanitizeMessage = (msg: Message): ChatMessage => ({
-    ...msg,
-    // Truncate very large content
-    content: msg.content && msg.content.length > 50000
-      ? msg.content.substring(0, 50000) + '\n\n[Content truncated due to size...]'
-      : msg.content,
-    // Don't load tool_calls from API to prevent large data issues
-    tool_calls: undefined,
-    toolCalls: undefined,
-    travelData: undefined,
-  })
+  // Process messages from API: extract travel data from tool messages and attach to assistant messages
+  const processMessagesFromAPI = (data: Message[]): ChatMessage[] => {
+    const result: ChatMessage[] = []
+    let pendingTravelData: TravelData = { flights: [], hotels: [], activities: [] }
+
+    for (let i = 0; i < data.length; i++) {
+      const msg = data[i]
+
+      if (msg.role === 'tool') {
+        // Parse tool message content to extract travel data
+        try {
+          const toolResult = JSON.parse(msg.content)
+
+          // Extract flights
+          if (toolResult.flights) {
+            const flights = (toolResult.flights as Record<string, unknown>[])
+              .map(transformFlight)
+              .filter((f): f is FlightData => f !== null)
+            pendingTravelData.flights.push(...flights)
+          }
+
+          // Extract hotels
+          if (toolResult.hotels) {
+            const hotels = (toolResult.hotels as Record<string, unknown>[])
+              .map(transformHotel)
+              .filter((h): h is HotelData => h !== null)
+            pendingTravelData.hotels.push(...hotels)
+          }
+
+          // Extract activities
+          if (toolResult.activities) {
+            const activities = (toolResult.activities as Record<string, unknown>[])
+              .map(transformActivity)
+              .filter((a): a is ActivityData => a !== null)
+            pendingTravelData.activities.push(...activities)
+          }
+        } catch {
+          // Not JSON or parsing failed, skip
+        }
+        // Don't add tool messages to result
+        continue
+      }
+
+      if (msg.role === 'assistant') {
+        // Attach any pending travel data to this assistant message
+        const chatMsg: ChatMessage = {
+          ...msg,
+          content: msg.content && msg.content.length > 50000
+            ? msg.content.substring(0, 50000) + '\n\n[Content truncated due to size...]'
+            : msg.content,
+          travelData: (pendingTravelData.flights.length > 0 || pendingTravelData.hotels.length > 0 || pendingTravelData.activities.length > 0)
+            ? { ...pendingTravelData }
+            : undefined,
+        }
+        result.push(chatMsg)
+        // Reset pending travel data
+        pendingTravelData = { flights: [], hotels: [], activities: [] }
+        continue
+      }
+
+      if (msg.role === 'user') {
+        result.push({
+          ...msg,
+          content: msg.content && msg.content.length > 50000
+            ? msg.content.substring(0, 50000) + '\n\n[Content truncated due to size...]'
+            : msg.content,
+        })
+      }
+    }
+
+    return result
+  }
 
   // Load initial messages with pagination
   useEffect(() => {
     const loadMessages = async () => {
       try {
         const { messages: data, total } = await api.getMessages(conversationId, MESSAGES_PER_PAGE, 0)
-        const sanitizedMessages = data.map(sanitizeMessage)
+        // Process messages: extract travel data from tool messages and attach to assistant messages
+        const processedMessages = processMessagesFromAPI(data)
 
-        setMessages(sanitizedMessages)
+        setMessages(processedMessages)
         setTotalMessages(total)
         setHasMore(total > MESSAGES_PER_PAGE)
       } catch (error) {
@@ -325,10 +394,11 @@ export default function ChatPage() {
     try {
       const offset = messages.length
       const { messages: olderMessages } = await api.getMessages(conversationId, MESSAGES_PER_PAGE, offset)
-      const sanitizedOlder = olderMessages.map(sanitizeMessage)
+      // Process messages: extract travel data from tool messages and attach to assistant messages
+      const processedOlder = processMessagesFromAPI(olderMessages)
 
       // Prepend older messages
-      setMessages(prev => [...sanitizedOlder, ...prev])
+      setMessages(prev => [...processedOlder, ...prev])
       setHasMore(messages.length + olderMessages.length < totalMessages)
     } catch (error) {
       console.error('Failed to load more messages:', error)
@@ -513,29 +583,44 @@ export default function ChatPage() {
             setStreamingContent(event.content)
           }
 
-          // Stream complete
-          if (event.message === 'Done' && finalContent) {
-            const assistantMessage: ChatMessage = {
-              id: `msg-${Date.now()}`,
-              conversation_id: conversationId,
-              role: 'assistant',
-              content: finalContent,
-              created_at: new Date().toISOString(),
-              toolCalls: toolCallsUsed,
-              travelData: travelDataCollected,
-            }
-            setMessages(prev => [...prev, assistantMessage])
-            setStreamingContent('')
-            setCurrentToolCalls([])
-            setCurrentTravelData({ flights: [], hotels: [], activities: [] })
+          // Stream complete - handle "Done" message
+          if (event.message === 'Done') {
+            console.log('[Stream] Done event received, finalContent length:', finalContent.length)
           }
         }
       )
+
+      // After stream completes, add the assistant message if we have content
+      // This handles both the "Done" event case and cases where stream ends without explicit "Done"
+      console.log('[Stream] Stream ended, finalContent length:', finalContent.length, 'toolCalls:', toolCallsUsed.length, 'travelData flights:', travelDataCollected.flights.length)
+
+      if (finalContent || toolCallsUsed.length > 0 || travelDataCollected.flights.length > 0 || travelDataCollected.hotels.length > 0 || travelDataCollected.activities.length > 0) {
+        const assistantMessage: ChatMessage = {
+          id: `msg-${Date.now()}`,
+          conversation_id: conversationId,
+          role: 'assistant',
+          content: finalContent || 'I processed your request.',
+          created_at: new Date().toISOString(),
+          toolCalls: toolCallsUsed.length > 0 ? toolCallsUsed : undefined,
+          travelData: (travelDataCollected.flights.length > 0 || travelDataCollected.hotels.length > 0 || travelDataCollected.activities.length > 0) ? travelDataCollected : undefined,
+        }
+        setMessages(prev => [...prev, assistantMessage])
+      }
+
+      // Clear streaming state
+      setStreamingContent('')
+      setCurrentToolCalls([])
+      setCurrentTravelData({ flights: [], hotels: [], activities: [] })
+
     } catch (error) {
       console.error('Failed to send message:', error)
       toast.error('Failed to send message')
       // Remove the temp message on error
       setMessages(prev => prev.filter(m => m.id !== tempUserMessage.id))
+      // Clear streaming state on error too
+      setStreamingContent('')
+      setCurrentToolCalls([])
+      setCurrentTravelData({ flights: [], hotels: [], activities: [] })
     } finally {
       setIsSending(false)
     }
@@ -649,21 +734,21 @@ export default function ChatPage() {
                 </div>
               )}
               {messages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className={cn(
-                    'flex gap-3',
-                    message.role === 'user' ? 'justify-end' : 'justify-start'
-                  )}
-                >
-                  {message.role === 'assistant' && (
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0">
-                      <Sparkles className="w-4 h-4 text-white" />
-                    </div>
-                  )}
+                <div key={message.id} className="space-y-3">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className={cn(
+                      'flex gap-3',
+                      message.role === 'user' ? 'justify-end' : 'justify-start'
+                    )}
+                  >
+                    {message.role === 'assistant' && (
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0">
+                        <Sparkles className="w-4 h-4 text-white" />
+                      </div>
+                    )}
 
                   <div
                     className={cn(
@@ -717,60 +802,6 @@ export default function ChatPage() {
                       </div>
                     )}
 
-                    {/* Travel data cards */}
-                    {message.travelData && (
-                      <>
-                        {/* Flights: 1 per row, 3 visible, scrollable */}
-                        {message.travelData.flights.length > 0 && (
-                          <div className="mb-4">
-                            <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                              <Plane className="w-4 h-4" />
-                              Flights Found ({message.travelData.flights.length})
-                            </h4>
-                            <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 scrollbar-thin">
-                              {message.travelData.flights.map((flight, idx) => (
-                                <FlightCard key={flight.id || idx} flight={flight} />
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Hotels: 2x2 grid, scrollable */}
-                        {message.travelData.hotels.length > 0 && (
-                          <div className="mb-4">
-                            <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                              <Hotel className="w-4 h-4" />
-                              Hotels Found ({message.travelData.hotels.length})
-                            </h4>
-                            <div className="max-h-[420px] overflow-y-auto pr-2 scrollbar-thin">
-                              <div className="grid grid-cols-2 gap-2">
-                                {message.travelData.hotels.map((hotel, idx) => (
-                                  <HotelCard key={hotel.id || idx} hotel={hotel} />
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Activities: 3x2 grid, scrollable */}
-                        {message.travelData.activities.length > 0 && (
-                          <div className="mb-4">
-                            <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                              <MapPin className="w-4 h-4" />
-                              Activities Found ({message.travelData.activities.length})
-                            </h4>
-                            <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
-                              <div className="grid grid-cols-3 gap-2">
-                                {message.travelData.activities.map((activity, idx) => (
-                                  <ActivityCard key={activity.id || idx} activity={activity} />
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    )}
-
                     {message.content && (
                       <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5">
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -786,6 +817,79 @@ export default function ChatPage() {
                     </div>
                   )}
                 </motion.div>
+
+                {/* Travel data as separate cards - OUTSIDE the message bubble */}
+                {message.travelData && message.role === 'assistant' && (
+                  <>
+                    {/* Flights Card */}
+                    {message.travelData.flights.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="w-full"
+                      >
+                        <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl p-4">
+                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                            <Plane className="w-4 h-4" />
+                            ✈️ Flights Found ({message.travelData.flights.length})
+                          </h4>
+                          <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 scrollbar-thin">
+                            {message.travelData.flights.map((flight, idx) => (
+                              <FlightCard key={`msg-flight-${idx}-${flight.id}`} flight={flight} />
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {/* Hotels Card */}
+                    {message.travelData.hotels.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="w-full"
+                      >
+                        <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl p-4">
+                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-purple-600 dark:text-purple-400">
+                            <Hotel className="w-4 h-4" />
+                            🏨 Hotels Found ({message.travelData.hotels.length})
+                          </h4>
+                          <div className="max-h-[420px] overflow-y-auto pr-2 scrollbar-thin">
+                            <div className="grid grid-cols-2 gap-2">
+                              {message.travelData.hotels.map((hotel, idx) => (
+                                <HotelCard key={`msg-hotel-${idx}-${hotel.id}`} hotel={hotel} />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {/* Activities Card */}
+                    {message.travelData.activities.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="w-full"
+                      >
+                        <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-4">
+                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-green-600 dark:text-green-400">
+                            <MapPin className="w-4 h-4" />
+                            🎯 Activities Found ({message.travelData.activities.length})
+                          </h4>
+                          <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
+                            <div className="grid grid-cols-3 gap-2">
+                              {message.travelData.activities.map((activity, idx) => (
+                                <ActivityCard key={`msg-activity-${idx}-${activity.id}`} activity={activity} />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </>
+                )}
+                </div>
               ))}
 
               {/* Streaming response */}
@@ -849,7 +953,7 @@ export default function ChatPage() {
                         </h4>
                         <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 scrollbar-thin">
                           {currentTravelData.flights.map((flight, idx) => (
-                            <FlightCard key={flight.id || idx} flight={flight} />
+                            <FlightCard key={`flight-${idx}-${flight.id}`} flight={flight} />
                           ))}
                         </div>
                       </div>
@@ -864,7 +968,7 @@ export default function ChatPage() {
                         <div className="max-h-[420px] overflow-y-auto pr-2 scrollbar-thin">
                           <div className="grid grid-cols-2 gap-2">
                             {currentTravelData.hotels.map((hotel, idx) => (
-                              <HotelCard key={hotel.id || idx} hotel={hotel} />
+                              <HotelCard key={`hotel-${idx}-${hotel.id}`} hotel={hotel} />
                             ))}
                           </div>
                         </div>
@@ -880,7 +984,7 @@ export default function ChatPage() {
                         <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
                           <div className="grid grid-cols-3 gap-2">
                             {currentTravelData.activities.map((activity, idx) => (
-                              <ActivityCard key={activity.id || idx} activity={activity} />
+                              <ActivityCard key={`activity-${idx}-${activity.id}`} activity={activity} />
                             ))}
                           </div>
                         </div>
