@@ -874,10 +874,10 @@ export default function ChatPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="w-full"
                       >
-                        <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl p-4">
-                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-purple-600 dark:text-purple-400">
+                        <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-xl p-4">
+                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-zinc-300">
                             <Hotel className="w-4 h-4" />
-                            🏨 Hotels Found ({message.travelData.hotels.length})
+                            Hotels Found ({message.travelData.hotels.length})
                           </h4>
                           <div className="max-h-[420px] overflow-y-auto pr-2 scrollbar-thin">
                             <div className="grid grid-cols-2 gap-2">
@@ -897,10 +897,10 @@ export default function ChatPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="w-full"
                       >
-                        <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-4">
-                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-green-600 dark:text-green-400">
+                        <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-xl p-4">
+                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-zinc-300">
                             <MapPin className="w-4 h-4" />
-                            🎯 Activities Found ({message.travelData.activities.length})
+                            Activities Found ({message.travelData.activities.length})
                           </h4>
                           <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
                             <div className="grid grid-cols-3 gap-2">
@@ -924,8 +924,8 @@ export default function ChatPage() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex gap-3 justify-start"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-4 h-4 text-white" />
+                  <div className="w-8 h-8 rounded-lg bg-zinc-700 flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-4 h-4 text-zinc-300" />
                   </div>
 
                   <div className="max-w-[95%] rounded-2xl rounded-tl-none bg-muted px-4 py-3">
@@ -938,10 +938,10 @@ export default function ChatPage() {
                             className={cn(
                               'flex items-center gap-2 text-xs rounded-lg px-3 py-2',
                               tc.status === 'running'
-                                ? 'bg-primary/10 text-primary'
+                                ? 'bg-zinc-700/50 text-zinc-300'
                                 : tc.status === 'completed'
-                                ? 'bg-green-500/10 text-green-500'
-                                : 'bg-destructive/10 text-destructive'
+                                ? 'bg-zinc-600/30 text-zinc-400'
+                                : 'bg-zinc-800/50 text-zinc-500'
                             )}
                           >
                             {tc.status === 'running' ? (
