@@ -31,7 +31,7 @@ export function BudgetTracker({ totalBudget, spentBudget, currency }: BudgetTrac
           <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
             <div
               className={`h-full transition-all ${
-                percentage > 90 ? 'bg-destructive' : percentage > 70 ? 'bg-yellow-500' : 'bg-primary'
+                percentage > 90 ? 'bg-zinc-400' : percentage > 70 ? 'bg-zinc-500' : 'bg-zinc-600'
               }`}
               style={{ width: `${Math.min(percentage, 100)}%` }}
             />

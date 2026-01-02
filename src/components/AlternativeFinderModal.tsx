@@ -334,9 +334,9 @@ export function AlternativeFinderModal({
             ) : (
               <div className="text-center py-20">
                 <div className="relative inline-block mb-6">
-                  <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full animate-pulse" />
-                  <div className="relative bg-gradient-to-br from-primary/10 to-primary/5 p-6 rounded-full">
-                    <Search className="h-16 w-16 text-primary/60" />
+                  <div className="absolute inset-0 bg-zinc-700/30 blur-2xl rounded-full animate-pulse" />
+                  <div className="relative bg-zinc-800/50 p-6 rounded-full">
+                    <Search className="h-16 w-16 text-zinc-400" />
                   </div>
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Ready to Find Alternatives?</h3>

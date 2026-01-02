@@ -18,7 +18,7 @@ export function TestimonialCard({ name, role, image, rating, text, trip }: Testi
     <ParallaxCard intensity={5}>
       <Card className="p-6 h-full hover:shadow-xl transition-shadow">
         <div className="flex items-start gap-4 mb-4">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+          <div className="w-12 h-12 rounded-full bg-zinc-700 flex items-center justify-center text-zinc-200 font-bold text-lg flex-shrink-0">
             {name.charAt(0)}
           </div>
           <div className="flex-1">
@@ -29,13 +29,13 @@ export function TestimonialCard({ name, role, image, rating, text, trip }: Testi
                 <Star
                   key={i}
                   className={`h-4 w-4 ${
-                    i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                    i < rating ? 'fill-zinc-400 text-zinc-400' : 'text-zinc-600'
                   }`}
                 />
               ))}
             </div>
           </div>
-          <Quote className="h-8 w-8 text-primary/20" />
+          <Quote className="h-8 w-8 text-zinc-600" />
         </div>
 
         <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{text}</p>

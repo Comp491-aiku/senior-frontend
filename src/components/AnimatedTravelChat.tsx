@@ -104,8 +104,8 @@ export function AnimatedTravelChat({ onSendMessage }: AnimatedTravelChatProps) {
                   {(() => {
                     const Icon = travelCommands[currentCommand].icon
                     return (
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                        <Icon className="h-6 w-6 text-white" />
+                      <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
+                        <Icon className="h-6 w-6 text-zinc-300" />
                       </div>
                     )
                   })()}
@@ -167,7 +167,7 @@ export function AnimatedTravelChat({ onSendMessage }: AnimatedTravelChatProps) {
                 <Button
                   onClick={handleSend}
                   disabled={!userInput.trim()}
-                  className="h-[60px] px-6 rounded-xl bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg shadow-primary/20"
+                  className="h-[60px] px-6 rounded-xl bg-zinc-700 hover:bg-zinc-600 shadow-lg shadow-black/20"
                 >
                   <Send className="h-5 w-5" />
                 </Button>
@@ -186,7 +186,7 @@ export function AnimatedTravelChat({ onSendMessage }: AnimatedTravelChatProps) {
                 </span>
               </div>
               <span className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <div className="w-2 h-2 rounded-full bg-zinc-400 animate-pulse" />
                 AI Ready
               </span>
             </div>
@@ -194,7 +194,7 @@ export function AnimatedTravelChat({ onSendMessage }: AnimatedTravelChatProps) {
         </div>
 
         {/* Glow effect */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/20 to-purple-600/20 blur-3xl opacity-50" />
+        <div className="absolute inset-0 -z-10 bg-zinc-800/30 blur-3xl opacity-50" />
       </motion.div>
     </div>
   )

@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import type { Itinerary, DayItinerary } from '@/types'
 import { format } from 'date-fns'
+import { Star } from 'lucide-react'
 
 interface ItineraryViewProps {
   itinerary: Itinerary
@@ -70,8 +71,8 @@ function DayCard({ day }: { day: DayItinerary }) {
                   <div className="text-right">
                     <p className="font-medium">${activity.cost}</p>
                     {activity.rating && (
-                      <p className="text-sm text-muted-foreground">
-                        ⭐ {activity.rating.toFixed(1)}
+                      <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-zinc-400 text-zinc-400" /> {activity.rating.toFixed(1)}
                       </p>
                     )}
                   </div>
@@ -112,7 +113,9 @@ function DayCard({ day }: { day: DayItinerary }) {
                   {day.accommodation.type} • {day.accommodation.location.address}
                 </p>
                 {day.accommodation.rating && (
-                  <p className="text-sm">⭐ {day.accommodation.rating.toFixed(1)}</p>
+                  <p className="text-sm flex items-center gap-1">
+                    <Star className="h-3 w-3 fill-zinc-400 text-zinc-400" /> {day.accommodation.rating.toFixed(1)}
+                  </p>
                 )}
               </div>
               <p className="font-medium">${day.accommodation.costPerNight}/night</p>
