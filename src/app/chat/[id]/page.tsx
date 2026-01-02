@@ -681,8 +681,8 @@ export default function ChatPage() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <Link href="/dashboard" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-zinc-300" />
               </div>
               <span className="font-semibold">AIKU</span>
             </Link>
@@ -707,8 +707,8 @@ export default function ChatPage() {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-12"
             >
-              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-zinc-700 flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-zinc-300" />
               </div>
               <h2 className="text-xl font-semibold mb-2">Start Planning Your Trip</h2>
               <p className="text-muted-foreground max-w-md mx-auto">
