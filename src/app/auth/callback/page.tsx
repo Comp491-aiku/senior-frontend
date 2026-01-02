@@ -82,8 +82,8 @@ function AuthCallbackContent() {
       <Card className="border-border/50 bg-card/50 backdrop-blur-xl">
         <CardHeader className="text-center">
           <div className="inline-flex items-center justify-center mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-              <Sparkles className="w-7 h-7 text-white" />
+            <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
+              <Sparkles className="w-7 h-7 text-zinc-300" />
             </div>
           </div>
 
@@ -96,7 +96,7 @@ function AuthCallbackContent() {
 
           {status === 'success' && (
             <>
-              <CardTitle className="text-2xl text-green-500">Welcome!</CardTitle>
+              <CardTitle className="text-2xl text-zinc-200">Welcome!</CardTitle>
               <CardDescription>Authentication successful. Redirecting...</CardDescription>
             </>
           )}
@@ -160,8 +160,8 @@ function LoadingFallback() {
       <Card className="border-border/50 bg-card/50 backdrop-blur-xl">
         <CardHeader className="text-center">
           <div className="inline-flex items-center justify-center mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-              <Sparkles className="w-7 h-7 text-white" />
+            <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
+              <Sparkles className="w-7 h-7 text-zinc-300" />
             </div>
           </div>
           <CardTitle className="text-2xl">Signing you in...</CardTitle>
@@ -179,8 +179,8 @@ export default function AuthCallbackPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/50 via-transparent to-transparent" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-zinc-800/30 rounded-full blur-3xl" />
 
       <Suspense fallback={<LoadingFallback />}>
         <AuthCallbackContent />

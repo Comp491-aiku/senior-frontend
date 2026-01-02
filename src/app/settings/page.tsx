@@ -84,8 +84,8 @@ export default function SettingsPage() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <Link href="/dashboard" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
+              <div className="w-7 h-7 rounded-lg bg-zinc-700 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-zinc-300" />
               </div>
               <span className="font-semibold">AIKU</span>
             </Link>
@@ -133,7 +133,7 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white text-2xl font-medium">
+                    <div className="w-16 h-16 rounded-full bg-zinc-700 flex items-center justify-center text-zinc-200 text-2xl font-medium">
                       {name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
                     </div>
                     <div>
@@ -239,7 +239,7 @@ export default function SettingsPage() {
                   <div className="space-y-4">
                     <Label>Theme</Label>
                     <div className="grid grid-cols-3 gap-4">
-                      <Card className="p-4 cursor-pointer border-primary bg-primary/5">
+                      <Card className="p-4 cursor-pointer border-zinc-600 bg-zinc-800/30">
                         <div className="w-full aspect-video rounded bg-zinc-900 mb-2" />
                         <p className="text-sm font-medium">Dark</p>
                       </Card>
