@@ -42,7 +42,8 @@ const toolIcons: Record<string, React.ReactNode> = {
 }
 
 // Get tool icon by name
-function getToolIcon(toolName: string): React.ReactNode {
+function getToolIcon(toolName: string | undefined): React.ReactNode {
+  if (!toolName) return toolIcons.default
   // Check for partial matches
   for (const [key, icon] of Object.entries(toolIcons)) {
     if (toolName.toLowerCase().includes(key.replace('_', ''))) {
@@ -53,7 +54,8 @@ function getToolIcon(toolName: string): React.ReactNode {
 }
 
 // Format tool name for display
-function formatToolName(name: string): string {
+function formatToolName(name: string | undefined): string {
+  if (!name) return 'Tool'
   return name
     .replace(/_/g, ' ')
     .replace(/\b\w/g, c => c.toUpperCase())
@@ -138,52 +140,55 @@ export default function ChatPage() {
 
     try {
       // Start streaming
+      let finalContent = ''
+      const toolCallsUsed: ToolCall[] = []
+
       await streamChat(
         conversationId,
         userMessage,
         (event: StreamEvent) => {
-          switch (event.type) {
-            case 'tool_start':
-              if (event.data.name) {
-                setCurrentToolCalls(prev => [
-                  ...prev,
-                  { name: event.data.name!, status: 'running' }
-                ])
+          // Tool starting (has tool name but no result yet)
+          if (event.tool && !event.result) {
+            const existingTool = toolCallsUsed.find(tc => tc.name === event.tool)
+            if (!existingTool) {
+              const newTool = { name: event.tool, status: 'running' as const }
+              toolCallsUsed.push(newTool)
+              setCurrentToolCalls([...toolCallsUsed])
+            }
+          }
+
+          // Tool completed (has both tool name and result)
+          if (event.tool && event.result) {
+            const toolIndex = toolCallsUsed.findIndex(tc => tc.name === event.tool)
+            if (toolIndex >= 0) {
+              toolCallsUsed[toolIndex] = {
+                ...toolCallsUsed[toolIndex],
+                status: 'completed',
+                result: JSON.stringify(event.result).substring(0, 100)
               }
-              break
+              setCurrentToolCalls([...toolCallsUsed])
+            }
+          }
 
-            case 'tool_result':
-              setCurrentToolCalls(prev =>
-                prev.map(tc =>
-                  tc.name === event.data.name
-                    ? { ...tc, status: 'completed', result: event.data.result }
-                    : tc
-                )
-              )
-              break
+          // Final content
+          if (event.content) {
+            finalContent = event.content
+            setStreamingContent(event.content)
+          }
 
-            case 'text_delta':
-              setStreamingContent(prev => prev + (event.data.content || ''))
-              break
-
-            case 'message_complete':
-              // Add the complete assistant message
-              const assistantMessage: ChatMessage = {
-                id: event.data.message_id || `msg-${Date.now()}`,
-                conversation_id: conversationId,
-                role: 'assistant',
-                content: event.data.content || '',
-                created_at: new Date().toISOString(),
-                tool_calls: event.data.tool_calls,
-              }
-              setMessages(prev => [...prev, assistantMessage])
-              setStreamingContent('')
-              setCurrentToolCalls([])
-              break
-
-            case 'error':
-              toast.error(event.data.message || 'An error occurred')
-              break
+          // Stream complete
+          if (event.message === 'Done' && finalContent) {
+            const assistantMessage: ChatMessage = {
+              id: `msg-${Date.now()}`,
+              conversation_id: conversationId,
+              role: 'assistant',
+              content: finalContent,
+              created_at: new Date().toISOString(),
+              tool_calls: toolCallsUsed.map(tc => ({ name: tc.name })),
+            }
+            setMessages(prev => [...prev, assistantMessage])
+            setStreamingContent('')
+            setCurrentToolCalls([])
           }
         }
       )
