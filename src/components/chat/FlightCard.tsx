@@ -42,15 +42,26 @@ interface FlightCardProps {
 }
 
 export function FlightCard({ flight, onSelect, selected }: FlightCardProps) {
-  const formatTime = (time: string) => {
+  // Guard against invalid flight data
+  if (!flight || !flight.departure || !flight.arrival || !flight.price) {
+    return null
+  }
+
+  const formatTime = (time: string | undefined) => {
+    if (!time) return '--:--'
     return time.slice(0, 5) // Get HH:MM format
   }
 
-  const formatPrice = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-    }).format(amount)
+  const formatPrice = (amount: number | undefined, currency: string | undefined) => {
+    if (amount === undefined || !currency) return '--'
+    try {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency,
+      }).format(amount)
+    } catch {
+      return `${currency} ${amount}`
+    }
   }
 
   return (

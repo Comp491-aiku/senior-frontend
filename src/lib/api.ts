@@ -138,12 +138,23 @@ export const api = {
   deleteConversation: (id: string) =>
     apiFetch<void>(`/api/v1/conversations/${id}`, { method: 'DELETE' }),
 
-  // Messages
-  getMessages: async (conversationId: string): Promise<Message[]> => {
+  // Messages - with pagination support
+  getMessages: async (conversationId: string, limit = 20, offset = 0): Promise<{ messages: Message[], total: number }> => {
+    const response = await apiFetch<Message[] | MessagesResponse>(
+      `/api/v1/conversations/${conversationId}/messages?limit=${limit}&offset=${offset}`
+    )
+    // Handle both array and object responses
+    if (Array.isArray(response)) {
+      return { messages: response, total: response.length }
+    }
+    return { messages: response.messages || [], total: response.total || 0 }
+  },
+
+  // Get all messages (for backwards compatibility)
+  getAllMessages: async (conversationId: string): Promise<Message[]> => {
     const response = await apiFetch<Message[] | MessagesResponse>(
       `/api/v1/conversations/${conversationId}/messages`
     )
-    // Handle both array and object responses
     if (Array.isArray(response)) {
       return response
     }

@@ -37,11 +37,21 @@ interface ActivityCardProps {
 }
 
 export function ActivityCard({ activity, onSelect, selected }: ActivityCardProps) {
-  const formatPrice = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-    }).format(amount)
+  // Guard against invalid activity data
+  if (!activity || !activity.location || !activity.price) {
+    return null
+  }
+
+  const formatPrice = (amount: number | undefined, currency: string | undefined) => {
+    if (amount === undefined || !currency) return '--'
+    try {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency,
+      }).format(amount)
+    } catch {
+      return `${currency} ${amount}`
+    }
   }
 
   return (
