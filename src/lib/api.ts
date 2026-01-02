@@ -73,18 +73,23 @@ export interface ChatResponse {
   created_at: string
 }
 
-// Stream event types
+// Stream event types - matches actual backend format
 export interface StreamEvent {
-  type: 'tool_start' | 'tool_result' | 'text_delta' | 'message_complete' | 'error' | 'stream_start' | 'stream_end'
-  data: {
-    name?: string
-    result?: string
-    content?: string
-    message_id?: string
-    tool_calls?: ToolCallInfo[]
-    message?: string
-    conversation_id?: string
-  }
+  // Status messages
+  message?: string
+  // Progress tracking
+  current?: number
+  max?: number
+  // Tool events
+  tool?: string
+  parameters?: Record<string, unknown>
+  result?: unknown
+  // Data events (flights, hotels, etc.)
+  type?: string
+  count?: number
+  items?: unknown[]
+  // Final content
+  content?: string
 }
 
 // API response types
@@ -163,6 +168,8 @@ export async function streamChat(
   const supabase = getSupabase()
   const { data: { session } } = await supabase.auth.getSession()
 
+  console.log('[StreamChat] Starting stream request to:', `${API_URL}/api/v1/chat/stream`)
+
   const response = await fetch(`${API_URL}/api/v1/chat/stream`, {
     method: 'POST',
     headers: {
@@ -175,13 +182,19 @@ export async function streamChat(
     }),
   })
 
+  console.log('[StreamChat] Response status:', response.status, response.statusText)
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: 'Stream failed' }))
+    console.error('[StreamChat] Error response:', error)
     throw new Error(error.detail || error.message || 'Stream failed')
   }
 
   const reader = response.body?.getReader()
-  if (!reader) throw new Error('No response body')
+  if (!reader) {
+    console.error('[StreamChat] No response body')
+    throw new Error('No response body')
+  }
 
   const decoder = new TextDecoder()
   let buffer = ''
@@ -189,19 +202,28 @@ export async function streamChat(
   try {
     while (true) {
       const { done, value } = await reader.read()
-      if (done) break
+      if (done) {
+        console.log('[StreamChat] Stream completed')
+        break
+      }
 
-      buffer += decoder.decode(value, { stream: true })
+      const chunk = decoder.decode(value, { stream: true })
+      buffer += chunk
+
       const lines = buffer.split('\n')
       buffer = lines.pop() || ''
 
       for (const line of lines) {
         if (line.startsWith('data:')) {
           try {
-            const eventData = JSON.parse(line.slice(5).trim())
-            onEvent(eventData as StreamEvent)
-          } catch {
-            // Skip invalid JSON
+            const jsonStr = line.slice(5).trim()
+            if (jsonStr) {
+              console.log('[StreamChat] Event received:', jsonStr.substring(0, 100))
+              const eventData = JSON.parse(jsonStr)
+              onEvent(eventData as StreamEvent)
+            }
+          } catch (e) {
+            console.warn('[StreamChat] Failed to parse:', line.substring(0, 50))
           }
         }
       }
@@ -210,13 +232,18 @@ export async function streamChat(
     // Process remaining buffer
     if (buffer.startsWith('data:')) {
       try {
-        const eventData = JSON.parse(buffer.slice(5).trim())
-        onEvent(eventData as StreamEvent)
+        const jsonStr = buffer.slice(5).trim()
+        if (jsonStr) {
+          console.log('[StreamChat] Final buffer event:', jsonStr.substring(0, 100))
+          const eventData = JSON.parse(jsonStr)
+          onEvent(eventData as StreamEvent)
+        }
       } catch {
         // Skip invalid JSON
       }
     }
   } catch (error) {
+    console.error('[StreamChat] Stream error:', error)
     onError?.(error as Error)
   }
 }
