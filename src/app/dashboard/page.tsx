@@ -91,8 +91,8 @@ export default function DashboardPage() {
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-zinc-300" />
             </div>
             <span className="text-xl font-bold">AIKU</span>
           </Link>
@@ -109,7 +109,7 @@ export default function DashboardPage() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white text-sm font-medium">
+                  <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-zinc-200 text-sm font-medium">
                     {user?.email?.charAt(0).toUpperCase() || 'U'}
                   </div>
                 </Button>
@@ -154,13 +154,13 @@ export default function DashboardPage() {
 
           {/* Quick Action Card */}
           <Card
-            className="p-6 mb-8 bg-gradient-to-br from-primary/10 to-purple-600/10 border-primary/20 cursor-pointer hover:border-primary/40 transition-colors"
+            className="p-6 mb-8 bg-zinc-800/30 border-zinc-700/50 cursor-pointer hover:border-zinc-600 transition-colors"
             onClick={handleNewChat}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                  <Plane className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
+                  <Plane className="w-6 h-6 text-zinc-300" />
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold">Start Planning a New Trip</h2>
@@ -227,8 +227,8 @@ export default function DashboardPage() {
                         <Card className="p-4 hover:bg-muted/50 transition-colors group">
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex items-start gap-3 flex-1 min-w-0">
-                              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                <MessageSquare className="w-5 h-5 text-primary" />
+                              <div className="w-10 h-10 rounded-lg bg-zinc-800/50 flex items-center justify-center flex-shrink-0">
+                                <MessageSquare className="w-5 h-5 text-zinc-400" />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <h3 className="font-medium truncate">

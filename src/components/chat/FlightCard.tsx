@@ -74,8 +74,8 @@ export function FlightCard({ flight, onSelect, selected }: FlightCardProps) {
     >
       <Card
         className={cn(
-          'p-4 cursor-pointer transition-all hover:border-primary/50',
-          selected && 'border-primary bg-primary/5'
+          'p-4 cursor-pointer transition-all hover:border-zinc-600',
+          selected && 'border-zinc-600 bg-zinc-800/30'
         )}
         onClick={() => onSelect?.(flight)}
       >
@@ -100,7 +100,7 @@ export function FlightCard({ flight, onSelect, selected }: FlightCardProps) {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-xl font-bold text-primary">
+              <p className="text-xl font-bold text-zinc-200">
                 {formatPrice(flight.price.amount, flight.price.currency)}
               </p>
               <p className="text-xs text-muted-foreground">{flight.cabin_class}</p>
@@ -123,10 +123,10 @@ export function FlightCard({ flight, onSelect, selected }: FlightCardProps) {
                 {flight.duration}
               </div>
               <div className="relative w-full h-px bg-border">
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary" />
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-zinc-500" />
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-zinc-500" />
                 {flight.stops > 0 && (
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-orange-500" />
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-zinc-400" />
                 )}
               </div>
               <Badge variant={flight.stops === 0 ? 'default' : 'secondary'} className="text-xs">
@@ -158,7 +158,7 @@ export function FlightCard({ flight, onSelect, selected }: FlightCardProps) {
                 </div>
               )}
               {flight.available_seats && (
-                <div className="flex items-center gap-1 text-xs text-orange-500">
+                <div className="flex items-center gap-1 text-xs text-zinc-400">
                   <Users className="w-3 h-3" />
                   <span>{flight.available_seats} left</span>
                 </div>
