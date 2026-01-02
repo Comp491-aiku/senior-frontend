@@ -438,11 +438,19 @@ export default function ChatPage() {
               if (toolNameLower.includes('flight') && (resultData.flights || resultData.outbound)) {
                 const rawFlights = (resultData.flights || resultData.outbound || []) as Record<string, unknown>[]
                 console.log('[TravelData] Found flights:', rawFlights.length)
+                if (rawFlights.length > 0) {
+                  console.log('[TravelData] First flight structure:', JSON.stringify(rawFlights[0]).substring(0, 500))
+                }
                 const flights = rawFlights
-                  .map(transformFlight)
+                  .map((f, i) => {
+                    const transformed = transformFlight(f)
+                    if (!transformed) console.log('[TravelData] Flight transform failed for index', i)
+                    return transformed
+                  })
                   .filter((f): f is FlightData => f !== null)
                 console.log('[TravelData] Transformed flights:', flights.length)
                 if (flights.length > 0) {
+                  console.log('[TravelData] First transformed flight:', JSON.stringify(flights[0]))
                   travelDataCollected.flights = [...travelDataCollected.flights, ...flights]
                   setCurrentTravelData({ ...travelDataCollected })
                 }
@@ -578,7 +586,7 @@ export default function ChatPage() {
 
       {/* Messages */}
       <ScrollArea className="flex-1 p-4">
-        <div className="container mx-auto max-w-3xl space-y-6 pb-4">
+        <div className="container mx-auto max-w-5xl space-y-6 pb-4">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -659,7 +667,7 @@ export default function ChatPage() {
 
                   <div
                     className={cn(
-                      'max-w-[85%] rounded-2xl px-4 py-3',
+                      'max-w-[95%] rounded-2xl px-4 py-3',
                       message.role === 'user'
                         ? 'bg-primary text-primary-foreground rounded-tr-none'
                         : 'bg-muted rounded-tl-none'
@@ -712,59 +720,51 @@ export default function ChatPage() {
                     {/* Travel data cards */}
                     {message.travelData && (
                       <>
+                        {/* Flights: 1 per row, 3 visible, scrollable */}
                         {message.travelData.flights.length > 0 && (
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
                               <Plane className="w-4 h-4" />
                               Flights Found ({message.travelData.flights.length})
                             </h4>
-                            <div className="space-y-2">
-                              {message.travelData.flights.slice(0, 3).map((flight, idx) => (
+                            <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 scrollbar-thin">
+                              {message.travelData.flights.map((flight, idx) => (
                                 <FlightCard key={flight.id || idx} flight={flight} />
                               ))}
-                              {message.travelData.flights.length > 3 && (
-                                <p className="text-xs text-muted-foreground text-center py-2">
-                                  +{message.travelData.flights.length - 3} more flights
-                                </p>
-                              )}
                             </div>
                           </div>
                         )}
 
+                        {/* Hotels: 2x2 grid, scrollable */}
                         {message.travelData.hotels.length > 0 && (
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
                               <Hotel className="w-4 h-4" />
                               Hotels Found ({message.travelData.hotels.length})
                             </h4>
-                            <div className="space-y-2">
-                              {message.travelData.hotels.slice(0, 3).map((hotel, idx) => (
-                                <HotelCard key={hotel.id || idx} hotel={hotel} />
-                              ))}
-                              {message.travelData.hotels.length > 3 && (
-                                <p className="text-xs text-muted-foreground text-center py-2">
-                                  +{message.travelData.hotels.length - 3} more hotels
-                                </p>
-                              )}
+                            <div className="max-h-[420px] overflow-y-auto pr-2 scrollbar-thin">
+                              <div className="grid grid-cols-2 gap-2">
+                                {message.travelData.hotels.map((hotel, idx) => (
+                                  <HotelCard key={hotel.id || idx} hotel={hotel} />
+                                ))}
+                              </div>
                             </div>
                           </div>
                         )}
 
+                        {/* Activities: 3x2 grid, scrollable */}
                         {message.travelData.activities.length > 0 && (
                           <div className="mb-4">
                             <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
                               <MapPin className="w-4 h-4" />
                               Activities Found ({message.travelData.activities.length})
                             </h4>
-                            <div className="space-y-2">
-                              {message.travelData.activities.slice(0, 3).map((activity, idx) => (
-                                <ActivityCard key={activity.id || idx} activity={activity} />
-                              ))}
-                              {message.travelData.activities.length > 3 && (
-                                <p className="text-xs text-muted-foreground text-center py-2">
-                                  +{message.travelData.activities.length - 3} more activities
-                                </p>
-                              )}
+                            <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
+                              <div className="grid grid-cols-3 gap-2">
+                                {message.travelData.activities.map((activity, idx) => (
+                                  <ActivityCard key={activity.id || idx} activity={activity} />
+                                ))}
+                              </div>
                             </div>
                           </div>
                         )}
@@ -799,7 +799,7 @@ export default function ChatPage() {
                     <Sparkles className="w-4 h-4 text-white" />
                   </div>
 
-                  <div className="max-w-[85%] rounded-2xl rounded-tl-none bg-muted px-4 py-3">
+                  <div className="max-w-[95%] rounded-2xl rounded-tl-none bg-muted px-4 py-3">
                     {/* Active tool calls with agent info */}
                     {currentToolCalls.length > 0 && (
                       <div className="mb-3 space-y-2">
@@ -847,15 +847,10 @@ export default function ChatPage() {
                           <Plane className="w-4 h-4" />
                           Flights Found ({currentTravelData.flights.length})
                         </h4>
-                        <div className="space-y-2">
-                          {currentTravelData.flights.slice(0, 3).map((flight, idx) => (
+                        <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 scrollbar-thin">
+                          {currentTravelData.flights.map((flight, idx) => (
                             <FlightCard key={flight.id || idx} flight={flight} />
                           ))}
-                          {currentTravelData.flights.length > 3 && (
-                            <p className="text-xs text-muted-foreground text-center py-2">
-                              +{currentTravelData.flights.length - 3} more flights
-                            </p>
-                          )}
                         </div>
                       </div>
                     )}
@@ -866,15 +861,12 @@ export default function ChatPage() {
                           <Hotel className="w-4 h-4" />
                           Hotels Found ({currentTravelData.hotels.length})
                         </h4>
-                        <div className="space-y-2">
-                          {currentTravelData.hotels.slice(0, 3).map((hotel, idx) => (
-                            <HotelCard key={hotel.id || idx} hotel={hotel} />
-                          ))}
-                          {currentTravelData.hotels.length > 3 && (
-                            <p className="text-xs text-muted-foreground text-center py-2">
-                              +{currentTravelData.hotels.length - 3} more hotels
-                            </p>
-                          )}
+                        <div className="max-h-[420px] overflow-y-auto pr-2 scrollbar-thin">
+                          <div className="grid grid-cols-2 gap-2">
+                            {currentTravelData.hotels.map((hotel, idx) => (
+                              <HotelCard key={hotel.id || idx} hotel={hotel} />
+                            ))}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -885,15 +877,12 @@ export default function ChatPage() {
                           <MapPin className="w-4 h-4" />
                           Activities Found ({currentTravelData.activities.length})
                         </h4>
-                        <div className="space-y-2">
-                          {currentTravelData.activities.slice(0, 3).map((activity, idx) => (
-                            <ActivityCard key={activity.id || idx} activity={activity} />
-                          ))}
-                          {currentTravelData.activities.length > 3 && (
-                            <p className="text-xs text-muted-foreground text-center py-2">
-                              +{currentTravelData.activities.length - 3} more activities
-                            </p>
-                          )}
+                        <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
+                          <div className="grid grid-cols-3 gap-2">
+                            {currentTravelData.activities.map((activity, idx) => (
+                              <ActivityCard key={activity.id || idx} activity={activity} />
+                            ))}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -923,7 +912,7 @@ export default function ChatPage() {
 
       {/* Input Area */}
       <div className="border-t border-border/40 bg-background/80 backdrop-blur-xl p-4 flex-shrink-0">
-        <div className="container mx-auto max-w-3xl">
+        <div className="container mx-auto max-w-5xl">
           <div className="flex gap-3 items-end">
             <div className="flex-1 relative">
               <Textarea

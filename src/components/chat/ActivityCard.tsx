@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MapPin, Clock, Star, Users, Calendar, Tag, ArrowRight } from 'lucide-react'
+import { MapPin, Clock, Star, ArrowRight } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -58,124 +58,78 @@ export function ActivityCard({ activity, onSelect, selected }: ActivityCardProps
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.01 }}
+      whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
+      className="h-full"
     >
       <Card
         className={cn(
-          'overflow-hidden cursor-pointer transition-all hover:border-primary/50',
+          'overflow-hidden cursor-pointer transition-all hover:border-primary/50 h-full flex flex-col',
           selected && 'border-primary bg-primary/5'
         )}
         onClick={() => onSelect?.(activity)}
       >
-        <div className="flex flex-col sm:flex-row">
-          {/* Image */}
-          <div className="sm:w-48 h-40 sm:h-auto relative bg-muted flex-shrink-0">
-            {activity.image ? (
-              <img
-                src={activity.image}
-                alt={activity.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-purple-600/20">
-                <MapPin className="w-8 h-8 text-muted-foreground" />
+        {/* Image - compact */}
+        <div className="h-24 relative bg-muted flex-shrink-0">
+          {activity.image ? (
+            <img
+              src={activity.image}
+              alt={activity.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-purple-600/20">
+              <MapPin className="w-5 h-5 text-muted-foreground" />
+            </div>
+          )}
+          {activity.category && (
+            <Badge className="absolute top-1 left-1 bg-primary text-[10px] px-1.5 py-0">
+              {activity.category}
+            </Badge>
+          )}
+          {activity.rating && (
+            <div className="absolute top-1 right-1 flex items-center gap-0.5 bg-black/60 rounded px-1.5 py-0.5">
+              <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+              <span className="text-white text-[10px] font-medium">{activity.rating.toFixed(1)}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Content - compact */}
+        <div className="flex-1 p-2 flex flex-col min-h-0">
+          {/* Name */}
+          <h3 className="font-semibold text-xs line-clamp-2 leading-tight">{activity.name}</h3>
+
+          {/* Details */}
+          <div className="flex items-center gap-2 mt-1.5 text-[10px] text-muted-foreground">
+            <div className="flex items-center gap-0.5">
+              <MapPin className="w-2.5 h-2.5" />
+              <span>{activity.location.city}</span>
+            </div>
+            {activity.duration && (
+              <div className="flex items-center gap-0.5">
+                <Clock className="w-2.5 h-2.5" />
+                <span>{activity.duration}</span>
               </div>
-            )}
-            {activity.category && (
-              <Badge className="absolute top-2 left-2 bg-primary">
-                {activity.category}
-              </Badge>
             )}
           </div>
 
-          {/* Content */}
-          <div className="flex-1 p-4">
-            <div className="flex flex-col h-full">
-              {/* Header */}
-              <div className="flex items-start justify-between gap-2">
-                <h3 className="font-semibold line-clamp-2">{activity.name}</h3>
-                {activity.rating && (
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
-                    <span className="font-medium">{activity.rating.toFixed(1)}</span>
-                    {activity.review_count && (
-                      <span className="text-xs text-muted-foreground">
-                        ({activity.review_count})
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Description */}
-              {activity.description && (
-                <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
-                  {activity.description}
-                </p>
-              )}
-
-              {/* Details */}
-              <div className="flex flex-wrap items-center gap-3 mt-3 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <MapPin className="w-3 h-3" />
-                  <span>{activity.location.city}</span>
-                </div>
-                {activity.duration && (
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{activity.duration}</span>
-                  </div>
-                )}
-                {activity.group_size && (
-                  <div className="flex items-center gap-1">
-                    <Users className="w-3 h-3" />
-                    <span>{activity.group_size}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Tags */}
-              {activity.tags && activity.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-3">
-                  {activity.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="secondary" className="text-xs">
-                      <Tag className="w-2 h-2 mr-1" />
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-
-              {/* Footer */}
-              <div className="flex items-center justify-between mt-auto pt-3">
-                <div className="text-xs">
-                  {activity.availability && (
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      <Calendar className="w-3 h-3" />
-                      <span>{activity.availability}</span>
-                    </div>
-                  )}
-                  {activity.cancellation && (
-                    <p className="text-green-500 mt-1">{activity.cancellation}</p>
-                  )}
-                </div>
-                <div className="text-right">
-                  <p className="text-xl font-bold text-primary">
-                    {formatPrice(activity.price.amount, activity.price.currency)}
-                  </p>
-                  <p className="text-xs text-muted-foreground">per person</p>
-                </div>
-              </div>
+          {/* Price - bottom */}
+          <div className="mt-auto pt-1.5 flex items-end justify-between">
+            <div className="text-right w-full">
+              <p className="text-sm font-bold text-primary">
+                {formatPrice(activity.price.amount, activity.price.currency)}
+              </p>
+              <p className="text-[10px] text-muted-foreground">per person</p>
             </div>
           </div>
         </div>
 
-        {/* Action Bar */}
-        <div className="px-4 py-2 bg-muted/50 border-t border-border flex items-center justify-end">
-          <Button size="sm" variant="ghost" className="gap-1">
+        {/* Action Bar - minimal */}
+        <div className="px-2 py-1 bg-muted/50 border-t border-border">
+          <Button size="sm" variant="ghost" className="w-full h-6 text-[10px] gap-0.5">
             Book Now
-            <ArrowRight className="w-3 h-3" />
+            <ArrowRight className="w-2.5 h-2.5" />
           </Button>
         </div>
       </Card>
@@ -200,7 +154,7 @@ export function ActivityList({ activities, onSelect, selectedId }: ActivityListP
   }
 
   return (
-    <div className="space-y-3">
+    <div className="grid grid-cols-3 gap-2">
       {activities.map((activity, index) => (
         <ActivityCard
           key={activity.id || index}

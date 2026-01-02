@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Hotel, Star, MapPin, Wifi, Car, Coffee, Dumbbell, ArrowRight } from 'lucide-react'
+import { Hotel, Star, MapPin, ArrowRight } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -36,13 +36,6 @@ interface HotelCardProps {
   selected?: boolean
 }
 
-const amenityIcons: Record<string, React.ReactNode> = {
-  wifi: <Wifi className="w-3 h-3" />,
-  parking: <Car className="w-3 h-3" />,
-  breakfast: <Coffee className="w-3 h-3" />,
-  gym: <Dumbbell className="w-3 h-3" />,
-}
-
 export function HotelCard({ hotel, onSelect, selected }: HotelCardProps) {
   // Guard against invalid hotel data
   if (!hotel || !hotel.location || !hotel.price) {
@@ -65,116 +58,74 @@ export function HotelCard({ hotel, onSelect, selected }: HotelCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.01 }}
+      whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
+      className="h-full"
     >
       <Card
         className={cn(
-          'overflow-hidden cursor-pointer transition-all hover:border-primary/50',
+          'overflow-hidden cursor-pointer transition-all hover:border-primary/50 h-full flex flex-col',
           selected && 'border-primary bg-primary/5'
         )}
         onClick={() => onSelect?.(hotel)}
       >
-        <div className="flex flex-col sm:flex-row">
-          {/* Image */}
-          <div className="sm:w-48 h-32 sm:h-auto relative bg-muted flex-shrink-0">
-            {hotel.image ? (
-              <img
-                src={hotel.image}
-                alt={hotel.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <Hotel className="w-8 h-8 text-muted-foreground" />
-              </div>
-            )}
-            {hotel.breakfast_included && (
-              <Badge className="absolute top-2 left-2 bg-green-500">
-                Breakfast included
-              </Badge>
-            )}
+        {/* Image - compact height */}
+        <div className="h-28 relative bg-muted flex-shrink-0">
+          {hotel.image ? (
+            <img
+              src={hotel.image}
+              alt={hotel.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-purple-600/10">
+              <Hotel className="w-6 h-6 text-muted-foreground" />
+            </div>
+          )}
+          {hotel.breakfast_included && (
+            <Badge className="absolute top-1 left-1 bg-green-500 text-[10px] px-1.5 py-0">
+              Breakfast
+            </Badge>
+          )}
+          {/* Rating badge */}
+          <div className="absolute top-1 right-1 flex items-center gap-0.5 bg-black/60 rounded px-1.5 py-0.5">
+            <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+            <span className="text-white text-xs font-medium">{hotel.rating}</span>
+          </div>
+        </div>
+
+        {/* Content - compact */}
+        <div className="flex-1 p-2.5 flex flex-col">
+          {/* Name */}
+          <h3 className="font-semibold text-sm line-clamp-1">{hotel.name}</h3>
+
+          {/* Location */}
+          <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+            <MapPin className="w-3 h-3 flex-shrink-0" />
+            <span className="line-clamp-1">{hotel.location.city}</span>
           </div>
 
-          {/* Content */}
-          <div className="flex-1 p-4">
-            <div className="flex flex-col h-full">
-              {/* Header */}
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <h3 className="font-semibold line-clamp-1">{hotel.name}</h3>
-                  <div className="flex items-center gap-1 mt-1">
-                    {Array.from({ length: hotel.rating }).map((_, i) => (
-                      <Star key={i} className="w-3 h-3 fill-yellow-500 text-yellow-500" />
-                    ))}
-                  </div>
-                </div>
-                {hotel.review_score && (
-                  <Badge variant="secondary" className="flex-shrink-0">
-                    {hotel.review_score.toFixed(1)}
-                    {hotel.review_count && (
-                      <span className="text-muted-foreground ml-1">
-                        ({hotel.review_count})
-                      </span>
-                    )}
-                  </Badge>
-                )}
-              </div>
-
-              {/* Location */}
-              <div className="flex items-center gap-1 mt-2 text-sm text-muted-foreground">
-                <MapPin className="w-3 h-3" />
-                <span className="line-clamp-1">
-                  {hotel.location.address}, {hotel.location.city}
-                </span>
-              </div>
-              {hotel.location.distance_to_center && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  {hotel.location.distance_to_center} from city center
-                </p>
+          {/* Price - bottom */}
+          <div className="mt-auto pt-2 flex items-end justify-between">
+            <div>
+              {hotel.cancellation && (
+                <p className="text-[10px] text-green-500">{hotel.cancellation}</p>
               )}
-
-              {/* Amenities */}
-              {hotel.amenities && hotel.amenities.length > 0 && (
-                <div className="flex items-center gap-2 mt-3">
-                  {hotel.amenities.slice(0, 4).map((amenity) => (
-                    <div
-                      key={amenity}
-                      className="flex items-center gap-1 text-xs text-muted-foreground"
-                    >
-                      {amenityIcons[amenity.toLowerCase()] || null}
-                      <span className="capitalize">{amenity}</span>
-                    </div>
-                  ))}
-                </div>
+            </div>
+            <div className="text-right">
+              <p className="text-base font-bold text-primary">
+                {formatPrice(hotel.price.amount, hotel.price.currency)}
+              </p>
+              {hotel.price.per_night && (
+                <p className="text-[10px] text-muted-foreground">per night</p>
               )}
-
-              {/* Footer */}
-              <div className="flex items-center justify-between mt-auto pt-3">
-                <div>
-                  {hotel.room_type && (
-                    <p className="text-sm text-muted-foreground">{hotel.room_type}</p>
-                  )}
-                  {hotel.cancellation && (
-                    <p className="text-xs text-green-500">{hotel.cancellation}</p>
-                  )}
-                </div>
-                <div className="text-right">
-                  <p className="text-xl font-bold text-primary">
-                    {formatPrice(hotel.price.amount, hotel.price.currency)}
-                  </p>
-                  {hotel.price.per_night && (
-                    <p className="text-xs text-muted-foreground">per night</p>
-                  )}
-                </div>
-              </div>
             </div>
           </div>
         </div>
 
-        {/* Action Bar */}
-        <div className="px-4 py-2 bg-muted/50 border-t border-border flex items-center justify-end">
-          <Button size="sm" variant="ghost" className="gap-1">
+        {/* Action Bar - minimal */}
+        <div className="px-2.5 py-1.5 bg-muted/50 border-t border-border">
+          <Button size="sm" variant="ghost" className="w-full h-7 text-xs gap-1">
             View Details
             <ArrowRight className="w-3 h-3" />
           </Button>
@@ -201,7 +152,7 @@ export function HotelList({ hotels, onSelect, selectedId }: HotelListProps) {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="grid grid-cols-2 gap-2">
       {hotels.map((hotel, index) => (
         <HotelCard
           key={hotel.id || index}
