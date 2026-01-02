@@ -42,8 +42,8 @@ export function DestinationCard({
             className="object-cover group-hover:scale-110 transition-transform duration-500"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
-          {/* Gradient overlay for better text readability */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-40 group-hover:opacity-30 transition-opacity`} />
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-zinc-900/40 group-hover:bg-zinc-900/30 transition-opacity" />
           {/* Dark overlay at bottom for text */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 

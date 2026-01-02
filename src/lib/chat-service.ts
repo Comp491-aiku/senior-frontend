@@ -94,24 +94,24 @@ class ChatService {
 - 3 gece: ~8,000 TL
 
 **Günlük Program:**
-📅 **Gün 1 (21 Aralık):**
+**Gün 1 (21 Aralık):**
 - Eiffel Kulesi ziyareti
 - Seine nehir gezisi
 - Akşam yemeği: Le Jules Verne
 
-📅 **Gün 2 (22 Aralık):**
+**Gün 2 (22 Aralık):**
 - Louvre Müzesi
 - Champs-Élysées'de alışveriş
 - Notre-Dame Katedrali
 
-📅 **Gün 3 (23 Aralık):**
+**Gün 3 (23 Aralık):**
 - Versailles Sarayı günübirlik tur
 - Montmartre & Sacré-Cœur
 - Son akşam: Moulin Rouge gösterisi
 
 **Toplam Tahmini Bütçe:** ~15,000-18,000 TL (kişi başı)
 
-Planı beğendiniz mi? İsterseniz alternatif seçeneklere bakabiliriz! ✨`
+Planı beğendiniz mi? İsterseniz alternatif seçeneklere bakabiliriz!`
 
           agentActivity.push(
             { agent: 'Flight Agent', status: 'completed', message: 'Uçuş seçenekleri bulundu', progress: 100 },
@@ -130,7 +130,7 @@ Planı beğendiniz mi? İsterseniz alternatif seçeneklere bakabiliriz! ✨`
             { agent: 'Alternative Agent', status: 'completed', message: 'Alternatifler hazır', progress: 100 }
           )
         } else {
-          responseContent = `Anlıyorum! Size nasıl yardımcı olabilirim? Hangi şehre, kaç gün ve ne zaman seyahat etmek istersiniz? Bütçeniz de varsa belirtin, size özel bir plan hazırlayayım! ✈️`
+          responseContent = `Anlıyorum! Size nasıl yardımcı olabilirim? Hangi şehre, kaç gün ve ne zaman seyahat etmek istersiniz? Bütçeniz de varsa belirtin, size özel bir plan hazırlayayım!`
           agentActivity.push(
             { agent: 'Orchestrator', status: 'completed', message: 'Hazır', progress: 100 }
           )

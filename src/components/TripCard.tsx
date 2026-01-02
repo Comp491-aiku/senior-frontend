@@ -14,10 +14,10 @@ interface TripCardProps {
 
 export function TripCard({ trip }: TripCardProps) {
   const statusColors = {
-    draft: 'bg-gray-500',
-    planning: 'bg-blue-500',
-    confirmed: 'bg-green-500',
-    completed: 'bg-purple-500',
+    draft: 'bg-zinc-600',
+    planning: 'bg-zinc-500',
+    confirmed: 'bg-zinc-400',
+    completed: 'bg-zinc-700',
   }
 
   return (

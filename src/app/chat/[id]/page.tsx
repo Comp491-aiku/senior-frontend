@@ -779,7 +779,7 @@ export default function ChatPage() {
                     className={cn(
                       'max-w-[95%] rounded-2xl px-4 py-3',
                       message.role === 'user'
-                        ? 'bg-primary text-primary-foreground rounded-tr-none'
+                        ? 'bg-zinc-700 text-zinc-100 rounded-tr-none'
                         : 'bg-muted rounded-tl-none'
                     )}
                   >

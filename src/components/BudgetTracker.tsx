@@ -60,8 +60,8 @@ export function BudgetTracker({ totalBudget, spentBudget, currency }: BudgetTrac
         )}
 
         {percentage > 90 && remaining >= 0 && (
-          <div className="p-3 bg-yellow-500/10 border border-yellow-500 rounded-lg">
-            <p className="text-sm text-yellow-700 font-medium">
+          <div className="p-3 bg-zinc-800/50 border border-zinc-600 rounded-lg">
+            <p className="text-sm text-zinc-300 font-medium">
               You&apos;re close to your budget limit!
             </p>
           </div>
