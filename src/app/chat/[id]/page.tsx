@@ -100,10 +100,12 @@ export default function ChatPage() {
     const loadMessages = async () => {
       try {
         const data = await api.getMessages(conversationId)
-        setMessages(data)
+        // Ensure we always have an array
+        setMessages(Array.isArray(data) ? data : [])
       } catch (error) {
         console.error('Failed to load messages:', error)
         toast.error('Failed to load conversation')
+        setMessages([])
       } finally {
         setIsLoading(false)
       }

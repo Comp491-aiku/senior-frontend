@@ -93,6 +93,11 @@ interface ConversationsResponse {
   total?: number
 }
 
+interface MessagesResponse {
+  messages: Message[]
+  total?: number
+}
+
 // API Functions
 export const api = {
   // Health
@@ -129,8 +134,16 @@ export const api = {
     apiFetch<void>(`/api/v1/conversations/${id}`, { method: 'DELETE' }),
 
   // Messages
-  getMessages: (conversationId: string) =>
-    apiFetch<Message[]>(`/api/v1/conversations/${conversationId}/messages`),
+  getMessages: async (conversationId: string): Promise<Message[]> => {
+    const response = await apiFetch<Message[] | MessagesResponse>(
+      `/api/v1/conversations/${conversationId}/messages`
+    )
+    // Handle both array and object responses
+    if (Array.isArray(response)) {
+      return response
+    }
+    return response.messages || []
+  },
 
   // Chat
   sendMessage: (data: ChatRequest) =>
