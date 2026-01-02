@@ -101,9 +101,9 @@ export function AgentActivityPanel() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'working':
-        return 'text-blue-500'
+        return 'text-zinc-400'
       case 'completed':
-        return 'text-green-500'
+        return 'text-zinc-300'
       default:
         return 'text-muted-foreground'
     }
@@ -123,7 +123,7 @@ export function AgentActivityPanel() {
   return (
     <Card className="p-6 bg-background/80 backdrop-blur-xl">
       <div className="flex items-center gap-2 mb-6">
-        <Sparkles className="h-5 w-5 text-primary" />
+        <Sparkles className="h-5 w-5 text-zinc-400" />
         <h3 className="text-lg font-semibold">AI Agents at Work</h3>
       </div>
 
@@ -140,8 +140,8 @@ export function AgentActivityPanel() {
             >
               <div className="flex items-start gap-4">
                 {/* Agent Icon */}
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br from-primary/10 to-purple-600/10 flex items-center justify-center flex-shrink-0 ${
-                  agent.status === 'working' ? 'ring-2 ring-primary/20 ring-offset-2 ring-offset-background' : ''
+                <div className={`w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center flex-shrink-0 ${
+                  agent.status === 'working' ? 'ring-2 ring-zinc-600 ring-offset-2 ring-offset-background' : ''
                 }`}>
                   <Icon className={`h-5 w-5 ${getStatusColor(agent.status)}`} />
                 </div>
@@ -172,8 +172,8 @@ export function AgentActivityPanel() {
                       transition={{ duration: 0.5, ease: 'easeOut' }}
                       className={`h-full rounded-full ${
                         agent.status === 'completed'
-                          ? 'bg-green-500'
-                          : 'bg-gradient-to-r from-primary to-purple-600'
+                          ? 'bg-zinc-500'
+                          : 'bg-zinc-500'
                       }`}
                     />
                   </div>
@@ -194,7 +194,7 @@ export function AgentActivityPanel() {
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Overall Progress</span>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <div className="w-2 h-2 rounded-full bg-zinc-500 animate-pulse" />
             <span className="font-semibold">
               {Math.round(
                 agents.reduce((acc, agent) => acc + agent.progress, 0) / agents.length

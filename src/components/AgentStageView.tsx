@@ -22,37 +22,31 @@ const AGENT_STAGES = [
     name: 'NLUAgent',
     label: 'Understanding',
     icon: Brain,
-    emoji: '🧠',
   },
   {
     name: 'WeatherAgent',
     label: 'Weather',
     icon: CloudRain,
-    emoji: '🌤️',
   },
   {
     name: 'FlightAgent',
     label: 'Flights',
     icon: Plane,
-    emoji: '✈️',
   },
   {
     name: 'AccommodationAgent',
     label: 'Hotels',
     icon: Hotel,
-    emoji: '🏨',
   },
   {
     name: 'ActivityAgent',
     label: 'Activities',
     icon: Calendar,
-    emoji: '🎯',
   },
   {
     name: 'OrchestratorAgent',
     label: 'Building',
     icon: Zap,
-    emoji: '🎭',
   },
 ]
 
@@ -80,19 +74,19 @@ export function AgentStageView({ activities }: AgentStageViewProps) {
             className={`
               relative p-3 rounded-lg border-2 transition-all duration-300
               ${status === 'completed'
-                ? 'border-green-500 bg-green-50 dark:bg-green-950/20'
+                ? 'border-zinc-500 bg-zinc-800/50'
                 : ''
               }
               ${status === 'started'
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20 animate-pulse'
+                ? 'border-zinc-400 bg-zinc-800/30 animate-pulse'
                 : ''
               }
               ${status === 'error'
-                ? 'border-red-500 bg-red-50 dark:bg-red-950/20'
+                ? 'border-zinc-600 bg-zinc-900/50'
                 : ''
               }
               ${status === 'pending'
-                ? 'border-gray-200 bg-gray-50 dark:bg-gray-900/20 opacity-50'
+                ? 'border-zinc-800 bg-zinc-900/20 opacity-50'
                 : ''
               }
             `}
@@ -100,24 +94,26 @@ export function AgentStageView({ activities }: AgentStageViewProps) {
             {/* Status Indicator */}
             <div className="absolute -top-2 -right-2">
               {status === 'completed' && (
-                <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-zinc-500 flex items-center justify-center">
                   <CheckCircle2 className="h-4 w-4 text-white" />
                 </div>
               )}
               {status === 'started' && (
-                <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-zinc-400 flex items-center justify-center">
                   <Loader2 className="h-4 w-4 text-white animate-spin" />
                 </div>
               )}
               {status === 'error' && (
-                <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-zinc-600 flex items-center justify-center">
                   <XCircle className="h-4 w-4 text-white" />
                 </div>
               )}
             </div>
 
             {/* Icon */}
-            <div className="text-3xl text-center mb-2">{stage.emoji}</div>
+            <div className="flex justify-center mb-2">
+              <stage.icon className="h-8 w-8 text-zinc-400" />
+            </div>
 
             {/* Label */}
             <div className="text-xs text-center font-medium mb-1">{stage.label}</div>

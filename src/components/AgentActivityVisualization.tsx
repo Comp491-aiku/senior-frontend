@@ -28,49 +28,49 @@ const AGENT_INFO = {
   NLUAgent: {
     icon: Brain,
     label: 'Understanding',
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-500/10',
-    borderColor: 'border-purple-500',
+    color: 'text-zinc-400',
+    bgColor: 'bg-zinc-800/50',
+    borderColor: 'border-zinc-600',
     description: 'Parsing your travel request',
   },
   WeatherAgent: {
     icon: CloudRain,
     label: 'Weather',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-blue-500',
+    color: 'text-zinc-400',
+    bgColor: 'bg-zinc-800/50',
+    borderColor: 'border-zinc-600',
     description: 'Fetching weather forecast',
   },
   FlightAgent: {
     icon: Plane,
     label: 'Flights',
-    color: 'text-sky-500',
-    bgColor: 'bg-sky-500/10',
-    borderColor: 'border-sky-500',
+    color: 'text-zinc-400',
+    bgColor: 'bg-zinc-800/50',
+    borderColor: 'border-zinc-600',
     description: 'Searching for flights',
   },
   AccommodationAgent: {
     icon: Hotel,
     label: 'Hotels',
-    color: 'text-amber-500',
-    bgColor: 'bg-amber-500/10',
-    borderColor: 'border-amber-500',
+    color: 'text-zinc-400',
+    bgColor: 'bg-zinc-800/50',
+    borderColor: 'border-zinc-600',
     description: 'Finding accommodations',
   },
   ActivityAgent: {
     icon: Calendar,
     label: 'Activities',
-    color: 'text-green-500',
-    bgColor: 'bg-green-500/10',
-    borderColor: 'border-green-500',
+    color: 'text-zinc-400',
+    bgColor: 'bg-zinc-800/50',
+    borderColor: 'border-zinc-600',
     description: 'Planning daily activities',
   },
   OrchestratorAgent: {
     icon: Zap,
     label: 'Finalizing',
-    color: 'text-orange-500',
-    bgColor: 'bg-orange-500/10',
-    borderColor: 'border-orange-500',
+    color: 'text-zinc-400',
+    bgColor: 'bg-zinc-800/50',
+    borderColor: 'border-zinc-600',
     description: 'Building your itinerary',
   },
 }
@@ -95,9 +95,9 @@ export function AgentActivityVisualization({
     return AGENT_INFO[agentName as keyof typeof AGENT_INFO] || {
       icon: Zap,
       label: agentName,
-      color: 'text-gray-500',
-      bgColor: 'bg-gray-500/10',
-      borderColor: 'border-gray-500',
+      color: 'text-zinc-400',
+      bgColor: 'bg-zinc-800/50',
+      borderColor: 'border-zinc-600',
       description: 'Processing...',
     }
   }
@@ -105,13 +105,13 @@ export function AgentActivityVisualization({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />
+        return <CheckCircle2 className="h-4 w-4 text-zinc-300" />
       case 'error':
-        return <XCircle className="h-4 w-4 text-red-500" />
+        return <XCircle className="h-4 w-4 text-zinc-500" />
       case 'started':
-        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />
+        return <Loader2 className="h-4 w-4 text-zinc-400 animate-spin" />
       default:
-        return <Loader2 className="h-4 w-4 text-gray-400" />
+        return <Loader2 className="h-4 w-4 text-zinc-500" />
     }
   }
 
@@ -246,12 +246,12 @@ function AgentCard({
     <Card
       className={`p-3 border-2 transition-all ${
         activity.status === 'completed'
-          ? 'border-green-500 bg-green-50 dark:bg-green-950/20'
+          ? 'border-zinc-500 bg-zinc-800/50'
           : activity.status === 'started'
           ? `${info.borderColor} ${info.bgColor} animate-pulse`
           : activity.status === 'error'
-          ? 'border-red-500 bg-red-50 dark:bg-red-950/20'
-          : 'border-gray-200 bg-gray-50 dark:bg-gray-900/20'
+          ? 'border-zinc-600 bg-zinc-900/50'
+          : 'border-zinc-800 bg-zinc-900/20'
       }`}
     >
       <div className="flex items-start gap-3">
