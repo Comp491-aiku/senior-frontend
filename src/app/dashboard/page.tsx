@@ -38,7 +38,6 @@ export default function DashboardPage() {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [isCreating, setIsCreating] = useState(false)
 
   useEffect(() => {
     loadConversations()
@@ -58,16 +57,9 @@ export default function DashboardPage() {
     }
   }
 
-  const handleNewChat = async () => {
-    setIsCreating(true)
-    try {
-      const conversation = await api.createConversation()
-      router.push(`/chat/${conversation.id}`)
-    } catch (error) {
-      console.error('Failed to create conversation:', error)
-      toast.error('Failed to create conversation')
-      setIsCreating(false)
-    }
+  const handleNewChat = () => {
+    // Navigate to new chat - conversation will be created when first message is sent
+    router.push('/chat/new')
   }
 
   const handleDeleteConversation = async (id: string, e: React.MouseEvent) => {
@@ -108,14 +100,9 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <Button
               onClick={handleNewChat}
-              disabled={isCreating}
               className="gap-2"
             >
-              {isCreating ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Plus className="w-4 h-4" />
-              )}
+              <Plus className="w-4 h-4" />
               New Trip
             </Button>
 
@@ -216,12 +203,8 @@ export default function DashboardPage() {
                 <p className="text-muted-foreground mb-4">
                   Start your first trip planning conversation with AIKU
                 </p>
-                <Button onClick={handleNewChat} disabled={isCreating}>
-                  {isCreating ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Plus className="w-4 h-4 mr-2" />
-                  )}
+                <Button onClick={handleNewChat}>
+                  <Plus className="w-4 h-4 mr-2" />
                   New Trip
                 </Button>
               </Card>

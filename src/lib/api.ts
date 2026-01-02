@@ -169,13 +169,13 @@ export const api = {
     }),
 }
 
-// Streaming chat function
+// Streaming chat function - returns the conversation_id (important for new conversations)
 export async function streamChat(
-  conversationId: string,
+  conversationId: string | null,
   message: string,
   onEvent: (event: StreamEvent) => void,
   onError?: (error: Error) => void
-): Promise<void> {
+): Promise<string> {
   const supabase = getSupabase()
   const { data: { session } } = await supabase.auth.getSession()
 
@@ -189,11 +189,14 @@ export async function streamChat(
     },
     body: JSON.stringify({
       message,
-      conversation_id: conversationId,
+      conversation_id: conversationId || undefined,
     }),
   })
 
-  console.log('[StreamChat] Response status:', response.status, response.statusText)
+  // Get the conversation_id from response headers (important for new conversations)
+  const returnedConversationId = response.headers.get('X-Conversation-Id') || conversationId || ''
+
+  console.log('[StreamChat] Response status:', response.status, response.statusText, 'Conversation ID:', returnedConversationId)
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: 'Stream failed' }))
@@ -257,4 +260,6 @@ export async function streamChat(
     console.error('[StreamChat] Stream error:', error)
     onError?.(error as Error)
   }
+
+  return returnedConversationId
 }

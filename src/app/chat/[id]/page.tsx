@@ -46,6 +46,14 @@ function transformActivity(item: Record<string, unknown>): ActivityData | null {
   const geoCode = item.geo_code as { latitude?: number; longitude?: number } | undefined
   const bookingLinks = item.booking_links as Record<string, string> | undefined
 
+  // Try to extract city from various possible fields
+  const location = item.location as { city?: string; address?: string } | undefined
+  const city = location?.city ||
+               (item.city as string | undefined) ||
+               (item.destination as string | undefined) ||
+               (item.place as string | undefined) ||
+               ''
+
   return {
     id: String(item.id || ''),
     name: String(item.name || 'Unknown Activity'),
@@ -53,8 +61,8 @@ function transformActivity(item: Record<string, unknown>): ActivityData | null {
     image: pictures?.[0],
     duration: item.duration ? String(item.duration) : undefined,
     location: {
-      city: 'Barcelona', // Default, could extract from geo_code
-      address: geoCode ? `${geoCode.latitude?.toFixed(4)}, ${geoCode.longitude?.toFixed(4)}` : undefined,
+      city: city,
+      address: location?.address || (geoCode ? `${geoCode.latitude?.toFixed(4)}, ${geoCode.longitude?.toFixed(4)}` : undefined),
     },
     price: {
       amount: price?.amount || 0,
@@ -259,11 +267,15 @@ interface ChatMessage extends Message {
 export default function ChatPage() {
   const params = useParams()
   const router = useRouter()
-  const conversationId = params.id as string
+  const paramId = params.id as string
+  const isNewChat = paramId === 'new'
+
+  // Track the actual conversation ID (null for new chats until first message)
+  const [conversationId, setConversationId] = useState<string | null>(isNewChat ? null : paramId)
 
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(!isNewChat)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [isSending, setIsSending] = useState(false)
   const [currentToolCalls, setCurrentToolCalls] = useState<ToolCall[]>([])
@@ -363,8 +375,13 @@ export default function ChatPage() {
     return result
   }
 
-  // Load initial messages with pagination
+  // Load initial messages with pagination (skip for new chats)
   useEffect(() => {
+    if (isNewChat || !conversationId) {
+      setIsLoading(false)
+      return
+    }
+
     const loadMessages = async () => {
       try {
         const { messages: data, total } = await api.getMessages(conversationId, MESSAGES_PER_PAGE, 0)
@@ -384,7 +401,7 @@ export default function ChatPage() {
     }
 
     loadMessages()
-  }, [conversationId])
+  }, [conversationId, isNewChat])
 
   // Load more messages (older messages)
   const loadMoreMessages = async () => {
@@ -422,7 +439,7 @@ export default function ChatPage() {
     // Add user message immediately
     const tempUserMessage: ChatMessage = {
       id: `temp-${Date.now()}`,
-      conversation_id: conversationId,
+      conversation_id: conversationId || 'new',
       role: 'user',
       content: userMessage,
       created_at: new Date().toISOString(),
@@ -435,7 +452,8 @@ export default function ChatPage() {
       const toolCallsUsed: ToolCall[] = []
       const travelDataCollected: TravelData = { flights: [], hotels: [], activities: [] }
 
-      await streamChat(
+      // For new chats, pass null - backend will create conversation with title from first message
+      const returnedConversationId = await streamChat(
         conversationId,
         userMessage,
         (event: StreamEvent) => {
@@ -594,10 +612,17 @@ export default function ChatPage() {
       // This handles both the "Done" event case and cases where stream ends without explicit "Done"
       console.log('[Stream] Stream ended, finalContent length:', finalContent.length, 'toolCalls:', toolCallsUsed.length, 'travelData flights:', travelDataCollected.flights.length)
 
+      // If this was a new chat, update the URL and state with the real conversation ID
+      if (isNewChat && returnedConversationId && returnedConversationId !== 'new') {
+        setConversationId(returnedConversationId)
+        // Update URL without full navigation (preserves state)
+        window.history.replaceState(null, '', `/chat/${returnedConversationId}`)
+      }
+
       if (finalContent || toolCallsUsed.length > 0 || travelDataCollected.flights.length > 0 || travelDataCollected.hotels.length > 0 || travelDataCollected.activities.length > 0) {
         const assistantMessage: ChatMessage = {
           id: `msg-${Date.now()}`,
-          conversation_id: conversationId,
+          conversation_id: returnedConversationId || conversationId || 'new',
           role: 'assistant',
           content: finalContent || 'I processed your request.',
           created_at: new Date().toISOString(),

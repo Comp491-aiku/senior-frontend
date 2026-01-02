@@ -103,10 +103,12 @@ export function ActivityCard({ activity, onSelect, selected }: ActivityCardProps
 
           {/* Details */}
           <div className="flex items-center gap-2 mt-1.5 text-[10px] text-muted-foreground">
-            <div className="flex items-center gap-0.5">
-              <MapPin className="w-2.5 h-2.5" />
-              <span>{activity.location.city}</span>
-            </div>
+            {activity.location.city && (
+              <div className="flex items-center gap-0.5">
+                <MapPin className="w-2.5 h-2.5" />
+                <span>{activity.location.city}</span>
+              </div>
+            )}
             {activity.duration && (
               <div className="flex items-center gap-0.5">
                 <Clock className="w-2.5 h-2.5" />
