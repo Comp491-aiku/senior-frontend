@@ -90,15 +90,15 @@ export function ShareTripModal({ isOpen, onClose, tripId, tripName }: ShareTripM
       >
         {/* Modal Card with scale animation */}
         <Card
-          className="w-full max-w-2xl bg-gradient-to-br from-background via-background to-primary/5 border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
+          className="w-full max-w-2xl bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with gradient */}
-          <div className="p-6 border-b bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
+          <div className="p-6 border-b bg-zinc-900/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/20 transform hover:scale-105 transition-transform">
-                  <Share2 className="h-7 w-7 text-primary-foreground" />
+                <div className="w-14 h-14 rounded-2xl bg-zinc-700 flex items-center justify-center shadow-lg shadow-black/20 transform hover:scale-105 transition-transform">
+                  <Share2 className="h-7 w-7 text-zinc-300" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
@@ -126,11 +126,11 @@ export function ShareTripModal({ isOpen, onClose, tripId, tripName }: ShareTripM
                 <Input
                   value={shareLink}
                   readOnly
-                  className="flex-1 bg-gradient-to-br from-muted/50 to-muted/30 backdrop-blur-sm border-primary/10 font-mono text-sm"
+                  className="flex-1 bg-zinc-800/30 backdrop-blur-sm border-zinc-700/50 font-mono text-sm"
                 />
                 <Button
                   onClick={handleCopyLink}
-                  className="shadow-lg hover:shadow-xl transition-all hover:scale-105 bg-gradient-to-r from-primary to-primary/80"
+                  className="shadow-lg hover:shadow-xl transition-all hover:scale-105 bg-zinc-700 hover:bg-zinc-600"
                 >
                   {copied ? (
                     <>
@@ -158,12 +158,12 @@ export function ShareTripModal({ isOpen, onClose, tripId, tripName }: ShareTripM
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleShare()}
-                    className="flex-1 h-12 bg-gradient-to-br from-muted/50 to-muted/30 backdrop-blur-sm border-primary/10"
+                    className="flex-1 h-12 bg-zinc-800/30 backdrop-blur-sm border-zinc-700/50"
                   />
                   <Button
                     onClick={handleShare}
                     disabled={!email || loading}
-                    className="h-12 shadow-lg hover:shadow-xl transition-all hover:scale-105 bg-gradient-to-r from-primary to-primary/80 disabled:opacity-50 disabled:hover:scale-100"
+                    className="h-12 shadow-lg hover:shadow-xl transition-all hover:scale-105 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 disabled:hover:scale-100"
                   >
                     {loading ? (
                       <>
@@ -193,8 +193,8 @@ export function ShareTripModal({ isOpen, onClose, tripId, tripName }: ShareTripM
                           onClick={() => setPermission(perm)}
                           className={`h-12 transition-all ${
                             permission === perm
-                              ? 'shadow-lg hover:shadow-xl bg-gradient-to-r from-primary to-primary/80 scale-105'
-                              : 'hover:border-primary/50 hover:bg-primary/5'
+                              ? 'shadow-lg hover:shadow-xl bg-zinc-700 scale-105'
+                              : 'hover:border-zinc-600 hover:bg-zinc-800/50'
                           }`}
                         >
                           <PermIcon className="h-4 w-4 mr-1.5" />
@@ -211,8 +211,8 @@ export function ShareTripModal({ isOpen, onClose, tripId, tripName }: ShareTripM
             {sharedUsers.length > 0 && (
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
-                    <Users className="h-5 w-5 text-primary" />
+                  <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center">
+                    <Users className="h-5 w-5 text-zinc-400" />
                   </div>
                   <Label className="text-sm font-semibold text-foreground/90">
                     Shared with ({sharedUsers.length})
@@ -224,12 +224,12 @@ export function ShareTripModal({ isOpen, onClose, tripId, tripName }: ShareTripM
                     return (
                       <div
                         key={idx}
-                        className="group flex items-center justify-between p-4 bg-gradient-to-br from-muted/50 to-muted/30 backdrop-blur-sm rounded-xl border border-primary/5 hover:border-primary/20 transition-all hover:shadow-lg animate-in fade-in slide-in-from-bottom-2"
+                        className="group flex items-center justify-between p-4 bg-zinc-800/30 backdrop-blur-sm rounded-xl border border-zinc-700/50 hover:border-zinc-600 transition-all hover:shadow-lg animate-in fade-in slide-in-from-bottom-2"
                         style={{ animationDelay: `${idx * 50}ms` }}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <Mail className="h-5 w-5 text-primary" />
+                          <div className="w-11 h-11 rounded-xl bg-zinc-800 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Mail className="h-5 w-5 text-zinc-400" />
                           </div>
                           <div>
                             <p className="font-semibold text-sm">{user.email}</p>
@@ -240,7 +240,7 @@ export function ShareTripModal({ isOpen, onClose, tripId, tripName }: ShareTripM
                         </div>
                         <Badge
                           variant="secondary"
-                          className="gap-1.5 bg-primary/10 text-primary border-primary/20 px-3 py-1.5"
+                          className="gap-1.5 bg-zinc-800 text-zinc-400 border-zinc-700 px-3 py-1.5"
                         >
                           <PermIcon className="h-3.5 w-3.5" />
                           {user.permission}
@@ -253,31 +253,31 @@ export function ShareTripModal({ isOpen, onClose, tripId, tripName }: ShareTripM
             )}
 
             {/* Permission Explanations with modern styling */}
-            <div className="p-5 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 border border-primary/10 rounded-xl">
+            <div className="p-5 bg-zinc-800/30 border border-zinc-700/50 rounded-xl">
               <div className="flex items-center gap-2 mb-3">
-                <Shield className="h-4 w-4 text-primary" />
+                <Shield className="h-4 w-4 text-zinc-400" />
                 <p className="text-sm font-semibold text-foreground">Permission Levels</p>
               </div>
               <ul className="text-sm text-muted-foreground space-y-2.5">
                 <li className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Eye className="h-4 w-4 text-primary" />
+                  <div className="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center">
+                    <Eye className="h-4 w-4 text-zinc-400" />
                   </div>
                   <div>
                     <strong className="text-foreground">View:</strong> Can see the trip details
                   </div>
                 </li>
                 <li className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Mail className="h-4 w-4 text-primary" />
+                  <div className="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center">
+                    <Mail className="h-4 w-4 text-zinc-400" />
                   </div>
                   <div>
                     <strong className="text-foreground">Comment:</strong> Can view and leave comments
                   </div>
                 </li>
                 <li className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Edit className="h-4 w-4 text-primary" />
+                  <div className="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center">
+                    <Edit className="h-4 w-4 text-zinc-400" />
                   </div>
                   <div>
                     <strong className="text-foreground">Edit:</strong> Can modify trip details and vote
@@ -288,10 +288,10 @@ export function ShareTripModal({ isOpen, onClose, tripId, tripName }: ShareTripM
           </div>
 
           {/* Footer with modern button */}
-          <div className="p-6 border-t bg-gradient-to-b from-background to-muted/20 flex justify-end">
+          <div className="p-6 border-t bg-zinc-900/30 flex justify-end">
             <Button
               onClick={onClose}
-              className="px-8 h-11 shadow-lg hover:shadow-xl transition-all hover:scale-105 bg-gradient-to-r from-primary to-primary/80"
+              className="px-8 h-11 shadow-lg hover:shadow-xl transition-all hover:scale-105 bg-zinc-700 hover:bg-zinc-600"
             >
               <Check className="h-4 w-4 mr-2" />
               Done
