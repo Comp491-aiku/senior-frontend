@@ -65,8 +65,8 @@ export function ActivityCard({ activity, onSelect, selected }: ActivityCardProps
     >
       <Card
         className={cn(
-          'overflow-hidden cursor-pointer transition-all hover:border-primary/50 h-full flex flex-col',
-          selected && 'border-primary bg-primary/5'
+          'overflow-hidden cursor-pointer transition-all hover:border-zinc-600 h-full flex flex-col',
+          selected && 'border-zinc-600 bg-zinc-800/30'
         )}
         onClick={() => onSelect?.(activity)}
       >
@@ -79,18 +79,18 @@ export function ActivityCard({ activity, onSelect, selected }: ActivityCardProps
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-purple-600/20">
+            <div className="w-full h-full flex items-center justify-center bg-zinc-800">
               <MapPin className="w-5 h-5 text-muted-foreground" />
             </div>
           )}
           {activity.category && (
-            <Badge className="absolute top-1 left-1 bg-primary text-[10px] px-1.5 py-0">
+            <Badge className="absolute top-1 left-1 bg-zinc-600 text-[10px] px-1.5 py-0">
               {activity.category}
             </Badge>
           )}
           {activity.rating && (
             <div className="absolute top-1 right-1 flex items-center gap-0.5 bg-black/60 rounded px-1.5 py-0.5">
-              <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+              <Star className="w-3 h-3 fill-zinc-400 text-zinc-400" />
               <span className="text-white text-[10px] font-medium">{activity.rating.toFixed(1)}</span>
             </div>
           )}
@@ -120,7 +120,7 @@ export function ActivityCard({ activity, onSelect, selected }: ActivityCardProps
           {/* Price - bottom */}
           <div className="mt-auto pt-1.5 flex items-end justify-between">
             <div className="text-right w-full">
-              <p className="text-sm font-bold text-primary">
+              <p className="text-sm font-bold text-zinc-200">
                 {formatPrice(activity.price.amount, activity.price.currency)}
               </p>
               <p className="text-[10px] text-muted-foreground">per person</p>

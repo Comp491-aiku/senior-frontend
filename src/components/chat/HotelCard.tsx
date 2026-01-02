@@ -65,8 +65,8 @@ export function HotelCard({ hotel, onSelect, selected }: HotelCardProps) {
     >
       <Card
         className={cn(
-          'overflow-hidden cursor-pointer transition-all hover:border-primary/50 h-full flex flex-col',
-          selected && 'border-primary bg-primary/5'
+          'overflow-hidden cursor-pointer transition-all hover:border-zinc-600 h-full flex flex-col',
+          selected && 'border-zinc-600 bg-zinc-800/30'
         )}
         onClick={() => onSelect?.(hotel)}
       >
@@ -79,18 +79,18 @@ export function HotelCard({ hotel, onSelect, selected }: HotelCardProps) {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-purple-600/10">
+            <div className="w-full h-full flex items-center justify-center bg-zinc-800">
               <Hotel className="w-6 h-6 text-muted-foreground" />
             </div>
           )}
           {hotel.breakfast_included && (
-            <Badge className="absolute top-1 left-1 bg-green-500 text-[10px] px-1.5 py-0">
+            <Badge className="absolute top-1 left-1 bg-zinc-600 text-[10px] px-1.5 py-0">
               Breakfast
             </Badge>
           )}
           {/* Rating badge */}
           <div className="absolute top-1 right-1 flex items-center gap-0.5 bg-black/60 rounded px-1.5 py-0.5">
-            <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+            <Star className="w-3 h-3 fill-zinc-400 text-zinc-400" />
             <span className="text-white text-xs font-medium">{hotel.rating}</span>
           </div>
         </div>
@@ -110,11 +110,11 @@ export function HotelCard({ hotel, onSelect, selected }: HotelCardProps) {
           <div className="mt-auto pt-2 flex items-end justify-between">
             <div>
               {hotel.cancellation && (
-                <p className="text-[10px] text-green-500">{hotel.cancellation}</p>
+                <p className="text-[10px] text-zinc-400">{hotel.cancellation}</p>
               )}
             </div>
             <div className="text-right">
-              <p className="text-base font-bold text-primary">
+              <p className="text-base font-bold text-zinc-200">
                 {formatPrice(hotel.price.amount, hotel.price.currency)}
               </p>
               {hotel.price.per_night && (
