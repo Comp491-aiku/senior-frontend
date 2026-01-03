@@ -16,7 +16,8 @@ import {
   Plane,
   Calendar,
   Trash2,
-  MoreVertical
+  MoreVertical,
+  Users,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -152,26 +153,47 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          {/* Quick Action Card */}
-          <Card
-            className="p-6 mb-8 bg-zinc-800/30 border-zinc-700/50 cursor-pointer hover:border-zinc-600 transition-colors"
-            onClick={handleNewChat}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
-                  <Plane className="w-6 h-6 text-zinc-300" />
+          {/* Quick Action Cards */}
+          <div className="grid md:grid-cols-2 gap-4 mb-8">
+            <Card
+              className="p-6 bg-zinc-800/30 border-zinc-700/50 cursor-pointer hover:border-zinc-600 transition-colors"
+              onClick={handleNewChat}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
+                    <Plane className="w-6 h-6 text-zinc-300" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold">Start a New Trip</h2>
+                    <p className="text-muted-foreground text-sm">
+                      Tell me where you want to go
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-lg font-semibold">Start Planning a New Trip</h2>
-                  <p className="text-muted-foreground text-sm">
-                    Tell me where you want to go and I&apos;ll help you plan everything
-                  </p>
-                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
               </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </div>
-          </Card>
+            </Card>
+
+            <Link href="/shared">
+              <Card className="p-6 bg-zinc-800/30 border-zinc-700/50 cursor-pointer hover:border-zinc-600 transition-colors h-full">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
+                      <Users className="w-6 h-6 text-zinc-300" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-semibold">Shared with Me</h2>
+                      <p className="text-muted-foreground text-sm">
+                        View trips friends have shared
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                </div>
+              </Card>
+            </Link>
+          </div>
 
           {/* Conversations Section */}
           <div className="space-y-4">
