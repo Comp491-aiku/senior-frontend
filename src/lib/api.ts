@@ -73,6 +73,103 @@ export interface ChatResponse {
   created_at: string
 }
 
+// Share types
+export interface SharedUser {
+  id: string
+  email?: string
+  name?: string
+  avatar_url?: string
+}
+
+export interface Share {
+  id: string
+  conversation_id: string
+  permission: 'view' | 'comment' | 'edit'
+  shared_with_email?: string
+  share_link?: string
+  share_token?: string
+  accepted: boolean
+  shared_user?: SharedUser
+  created_at: string
+  updated_at: string
+}
+
+export interface SharedConversation {
+  id: string
+  conversation_id: string
+  permission: 'view' | 'comment' | 'edit'
+  accepted: boolean
+  conversation: Conversation
+  owner: SharedUser
+  created_at: string
+}
+
+export interface CreateShareRequest {
+  permission?: 'view' | 'comment' | 'edit'
+  email?: string
+  create_link?: boolean
+  expires_in_days?: number
+}
+
+// Todo types
+export type TodoPriority = 'low' | 'medium' | 'high'
+export type TodoStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled'
+export type TodoCategory = 'booking' | 'packing' | 'research' | 'transportation' | 'accommodation' | 'activity' | 'other'
+
+export interface TodoUser {
+  id: string
+  email?: string
+  name?: string
+  avatar_url?: string
+}
+
+export interface Todo {
+  id: string
+  conversation_id: string
+  title: string
+  description?: string
+  due_date?: string
+  priority: TodoPriority
+  status: TodoStatus
+  category?: TodoCategory
+  position: number
+  creator?: TodoUser
+  assignee?: TodoUser
+  completer?: TodoUser
+  linked_result_id?: string
+  completed_at?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface TodoStats {
+  total: number
+  pending: number
+  in_progress: number
+  completed: number
+  cancelled: number
+}
+
+export interface CreateTodoRequest {
+  title: string
+  description?: string
+  due_date?: string
+  priority?: TodoPriority
+  category?: TodoCategory
+  assigned_to?: string
+  linked_result_id?: string
+}
+
+export interface UpdateTodoRequest {
+  title?: string
+  description?: string
+  due_date?: string
+  priority?: TodoPriority
+  status?: TodoStatus
+  category?: TodoCategory
+  assigned_to?: string
+}
+
 // Stream event types - matches actual backend format
 export interface StreamEvent {
   // Status messages
@@ -167,6 +264,102 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+
+  // Shares
+  getShares: async (conversationId: string): Promise<Share[]> => {
+    const response = await apiFetch<{ shares: Share[]; total: number }>(
+      `/api/v1/conversations/${conversationId}/shares`
+    )
+    return response.shares || []
+  },
+
+  createShare: (conversationId: string, data: CreateShareRequest) =>
+    apiFetch<Share>(`/api/v1/conversations/${conversationId}/shares`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  updateShare: (conversationId: string, shareId: string, permission: 'view' | 'comment' | 'edit') =>
+    apiFetch<Share>(`/api/v1/conversations/${conversationId}/shares/${shareId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ permission }),
+    }),
+
+  revokeShare: (conversationId: string, shareId: string) =>
+    apiFetch<void>(`/api/v1/conversations/${conversationId}/shares/${shareId}`, {
+      method: 'DELETE',
+    }),
+
+  getSharedWithMe: async (): Promise<{ shared: SharedConversation[]; pending: SharedConversation[] }> => {
+    const response = await apiFetch<{ shared: SharedConversation[]; pending: SharedConversation[]; total: number }>(
+      '/api/v1/shares/shared-with-me'
+    )
+    return { shared: response.shared || [], pending: response.pending || [] }
+  },
+
+  acceptShare: (shareId: string) =>
+    apiFetch<{ message: string; conversation_id: string }>(`/api/v1/shares/${shareId}/accept`, {
+      method: 'POST',
+    }),
+
+  declineShare: (shareId: string) =>
+    apiFetch<{ message: string }>(`/api/v1/shares/${shareId}/decline`, {
+      method: 'POST',
+    }),
+
+  getShareByToken: (token: string) =>
+    apiFetch<{
+      conversation_id: string
+      permission: string
+      title: string
+      authenticated: boolean
+      can_access: boolean
+      message?: string
+    }>(`/api/v1/shares/link/${token}`, { skipAuth: true }),
+
+  // Todos
+  getTodos: async (conversationId: string, filters?: { status?: TodoStatus; priority?: TodoPriority; assigned_to?: string }): Promise<{ todos: Todo[]; stats: TodoStats }> => {
+    const params = new URLSearchParams()
+    if (filters?.status) params.append('status', filters.status)
+    if (filters?.priority) params.append('priority', filters.priority)
+    if (filters?.assigned_to) params.append('assigned_to', filters.assigned_to)
+    const queryString = params.toString()
+    const response = await apiFetch<{ todos: Todo[]; total: number; stats: TodoStats }>(
+      `/api/v1/conversations/${conversationId}/todos${queryString ? `?${queryString}` : ''}`
+    )
+    return { todos: response.todos || [], stats: response.stats }
+  },
+
+  createTodo: (conversationId: string, data: CreateTodoRequest) =>
+    apiFetch<Todo>(`/api/v1/conversations/${conversationId}/todos`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  updateTodo: (conversationId: string, todoId: string, data: UpdateTodoRequest) =>
+    apiFetch<Todo>(`/api/v1/conversations/${conversationId}/todos/${todoId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+
+  deleteTodo: (conversationId: string, todoId: string) =>
+    apiFetch<void>(`/api/v1/conversations/${conversationId}/todos/${todoId}`, {
+      method: 'DELETE',
+    }),
+
+  toggleTodo: (conversationId: string, todoId: string) =>
+    apiFetch<Todo>(`/api/v1/conversations/${conversationId}/todos/${todoId}/toggle`, {
+      method: 'POST',
+    }),
+
+  reorderTodos: (conversationId: string, todoIds: string[]) =>
+    apiFetch<void>(`/api/v1/conversations/${conversationId}/todos/reorder`, {
+      method: 'POST',
+      body: JSON.stringify({ todo_ids: todoIds }),
+    }),
+
+  getTodoStats: (conversationId: string) =>
+    apiFetch<TodoStats>(`/api/v1/conversations/${conversationId}/todos/stats`),
 }
 
 // Streaming chat function - returns the conversation_id (important for new conversations)
