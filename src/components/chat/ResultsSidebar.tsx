@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plane, Hotel, MapPin, X, ChevronRight } from 'lucide-react'
+import { Plane, Hotel, MapPin, X, ChevronRight, ListTodo } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { FlightCard, type FlightData } from './FlightCard'
 import { HotelCard, type HotelData } from './HotelCard'
 import { ActivityCard, type ActivityData } from './ActivityCard'
+import { TodoList } from '@/components/todos'
 
 export interface TravelData {
   flights: FlightData[]
@@ -16,7 +17,7 @@ export interface TravelData {
   activities: ActivityData[]
 }
 
-type TabType = 'flights' | 'hotels' | 'activities'
+type TabType = 'flights' | 'hotels' | 'activities' | 'todos'
 
 interface ResultsSidebarProps {
   isOpen: boolean
@@ -24,12 +25,14 @@ interface ResultsSidebarProps {
   travelData: TravelData
   activeTab: TabType
   onTabChange: (tab: TabType) => void
+  conversationId?: string
 }
 
 const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
   { id: 'flights', label: 'Flights', icon: <Plane className="w-4 h-4" /> },
   { id: 'hotels', label: 'Hotels', icon: <Hotel className="w-4 h-4" /> },
   { id: 'activities', label: 'Activities', icon: <MapPin className="w-4 h-4" /> },
+  { id: 'todos', label: 'Todos', icon: <ListTodo className="w-4 h-4" /> },
 ]
 
 export function ResultsSidebar({
@@ -38,6 +41,7 @@ export function ResultsSidebar({
   travelData,
   activeTab,
   onTabChange,
+  conversationId,
 }: ResultsSidebarProps) {
   const getCounts = () => ({
     flights: travelData.flights.length,
@@ -93,12 +97,12 @@ export function ResultsSidebar({
                 >
                   {tab.icon}
                   <span>{tab.label}</span>
-                  {counts[tab.id] > 0 && (
+                  {tab.id !== 'todos' && counts[tab.id as keyof typeof counts] > 0 && (
                     <span className={cn(
                       'px-1.5 py-0.5 text-xs rounded-full',
                       activeTab === tab.id ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-700 text-zinc-300'
                     )}>
-                      {counts[tab.id]}
+                      {counts[tab.id as keyof typeof counts]}
                     </span>
                   )}
                 </button>
@@ -149,6 +153,10 @@ export function ResultsSidebar({
                         <EmptyState icon={<MapPin />} message="No activities found" />
                       )}
                     </div>
+                  )}
+
+                  {activeTab === 'todos' && conversationId && (
+                    <TodoList conversationId={conversationId} />
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -211,12 +219,12 @@ export function ResultsSidebar({
                   >
                     {tab.icon}
                     <span>{tab.label}</span>
-                    {counts[tab.id] > 0 && (
+                    {tab.id !== 'todos' && counts[tab.id as keyof typeof counts] > 0 && (
                       <span className={cn(
                         'px-1.5 py-0.5 text-xs rounded-full',
                         activeTab === tab.id ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-700 text-zinc-300'
                       )}>
-                        {counts[tab.id]}
+                        {counts[tab.id as keyof typeof counts]}
                       </span>
                     )}
                   </button>
@@ -255,6 +263,10 @@ export function ResultsSidebar({
                           <ActivityCard key={activity.id || index} activity={activity} />
                         ))}
                       </div>
+                    )}
+
+                    {activeTab === 'todos' && conversationId && (
+                      <TodoList conversationId={conversationId} />
                     )}
                   </motion.div>
                 </AnimatePresence>
