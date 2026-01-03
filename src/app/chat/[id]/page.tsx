@@ -21,7 +21,8 @@ import {
   AlertCircle,
   ChevronDown,
   Bot,
-  CheckCircle2
+  CheckCircle2,
+  Share2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -37,6 +38,7 @@ import { FlightCard, FlightData } from '@/components/chat/FlightCard'
 import { HotelCard, HotelData } from '@/components/chat/HotelCard'
 import { ActivityCard, ActivityData } from '@/components/chat/ActivityCard'
 import { ResultsSidebar, ResultsToggleButton, TravelData as SidebarTravelData } from '@/components/chat/ResultsSidebar'
+import { ShareTripModal } from '@/components/ShareTripModal'
 
 // Transform backend activity data to ActivityCard format
 function transformActivity(item: Record<string, unknown>): ActivityData | null {
@@ -299,12 +301,16 @@ export default function ChatPage() {
 
   // Sidebar state
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [activeTab, setActiveTab] = useState<'flights' | 'hotels' | 'activities'>('flights')
+  const [activeTab, setActiveTab] = useState<'flights' | 'hotels' | 'activities' | 'todos'>('flights')
   const [allTravelData, setAllTravelData] = useState<SidebarTravelData>({
     flights: [],
     hotels: [],
     activities: []
   })
+
+  // Share modal state
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const [conversationTitle, setConversationTitle] = useState('New Trip')
 
   // Pagination state
   const [hasMore, setHasMore] = useState(false)
@@ -735,9 +741,22 @@ export default function ChatPage() {
             </Link>
           </div>
 
-          <Button variant="ghost" size="icon" onClick={() => router.push('/settings')}>
-            <Settings className="w-5 h-5" />
-          </Button>
+          <div className="flex items-center gap-1">
+            {/* Share Button - only show for existing conversations */}
+            {conversationId && !isNewChat && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsShareModalOpen(true)}
+                title="Share trip"
+              >
+                <Share2 className="w-5 h-5" />
+              </Button>
+            )}
+            <Button variant="ghost" size="icon" onClick={() => router.push('/settings')}>
+              <Settings className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -1082,6 +1101,7 @@ export default function ChatPage() {
         travelData={allTravelData}
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        conversationId={conversationId || undefined}
       />
 
       {/* Toggle Button (when sidebar is closed) */}
@@ -1093,6 +1113,16 @@ export default function ChatPage() {
             hotels: allTravelData.hotels.length,
             activities: allTravelData.activities.length,
           }}
+        />
+      )}
+
+      {/* Share Modal */}
+      {conversationId && (
+        <ShareTripModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          tripId={conversationId}
+          tripName={conversationTitle}
         />
       )}
     </div>
