@@ -36,6 +36,7 @@ import remarkGfm from 'remark-gfm'
 import { FlightCard, FlightData } from '@/components/chat/FlightCard'
 import { HotelCard, HotelData } from '@/components/chat/HotelCard'
 import { ActivityCard, ActivityData } from '@/components/chat/ActivityCard'
+import { ResultsSidebar, ResultsToggleButton, TravelData as SidebarTravelData } from '@/components/chat/ResultsSidebar'
 
 // Transform backend activity data to ActivityCard format
 function transformActivity(item: Record<string, unknown>): ActivityData | null {
@@ -296,6 +297,15 @@ export default function ChatPage() {
     activities: []
   })
 
+  // Sidebar state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [activeTab, setActiveTab] = useState<'flights' | 'hotels' | 'activities'>('flights')
+  const [allTravelData, setAllTravelData] = useState<SidebarTravelData>({
+    flights: [],
+    hotels: [],
+    activities: []
+  })
+
   // Pagination state
   const [hasMore, setHasMore] = useState(false)
   const [totalMessages, setTotalMessages] = useState(0)
@@ -385,6 +395,19 @@ export default function ChatPage() {
     return result
   }
 
+  // Aggregate all travel data from messages for sidebar
+  const aggregateTravelData = (msgs: ChatMessage[]): SidebarTravelData => {
+    const aggregated: SidebarTravelData = { flights: [], hotels: [], activities: [] }
+    for (const msg of msgs) {
+      if (msg.travelData) {
+        aggregated.flights.push(...msg.travelData.flights)
+        aggregated.hotels.push(...msg.travelData.hotels)
+        aggregated.activities.push(...msg.travelData.activities)
+      }
+    }
+    return aggregated
+  }
+
   // Load initial messages with pagination (skip for new chats)
   useEffect(() => {
     if (isNewChat || !conversationId) {
@@ -401,6 +424,9 @@ export default function ChatPage() {
         setMessages(processedMessages)
         setTotalMessages(total)
         setHasMore(total > MESSAGES_PER_PAGE)
+
+        // Aggregate travel data for sidebar
+        setAllTravelData(aggregateTravelData(processedMessages))
       } catch (error) {
         console.error('Failed to load messages:', error)
         toast.error('Failed to load conversation')
@@ -640,6 +666,15 @@ export default function ChatPage() {
           travelData: (travelDataCollected.flights.length > 0 || travelDataCollected.hotels.length > 0 || travelDataCollected.activities.length > 0) ? travelDataCollected : undefined,
         }
         setMessages(prev => [...prev, assistantMessage])
+
+        // Update sidebar with new travel data
+        if (travelDataCollected.flights.length > 0 || travelDataCollected.hotels.length > 0 || travelDataCollected.activities.length > 0) {
+          setAllTravelData(prev => ({
+            flights: [...prev.flights, ...travelDataCollected.flights],
+            hotels: [...prev.hotels, ...travelDataCollected.hotels],
+            activities: [...prev.activities, ...travelDataCollected.activities],
+          }))
+        }
       }
 
       // Clear streaming state
@@ -678,9 +713,11 @@ export default function ChatPage() {
   }, [input])
 
   return (
-    <div className="h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border/40 bg-background/80 backdrop-blur-xl flex-shrink-0">
+    <div className="h-screen bg-background flex">
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Header */}
+        <header className="border-b border-border/40 bg-background/80 backdrop-blur-xl flex-shrink-0">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button
@@ -1083,6 +1120,28 @@ export default function ChatPage() {
           </p>
         </div>
       </div>
+      </div>
+
+      {/* Results Sidebar */}
+      <ResultsSidebar
+        isOpen={isSidebarOpen}
+        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+        travelData={allTravelData}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
+
+      {/* Toggle Button (when sidebar is closed) */}
+      {!isSidebarOpen && (
+        <ResultsToggleButton
+          onClick={() => setIsSidebarOpen(true)}
+          counts={{
+            flights: allTravelData.flights.length,
+            hotels: allTravelData.hotels.length,
+            activities: allTravelData.activities.length,
+          }}
+        />
+      )}
     </div>
   )
 }
