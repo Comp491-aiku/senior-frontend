@@ -890,76 +890,40 @@ export default function ChatPage() {
                   )}
                 </motion.div>
 
-                {/* Travel data as separate cards - OUTSIDE the message bubble */}
+                {/* Travel data summary - results shown in sidebar */}
                 {message.travelData && message.role === 'assistant' && (
-                  <>
-                    {/* Flights Card */}
+                  <div className="flex flex-wrap gap-2 ml-11 mt-1">
                     {message.travelData.flights.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="w-full"
+                      <Badge
+                        variant="secondary"
+                        className="cursor-pointer hover:bg-zinc-600"
+                        onClick={() => { setActiveTab('flights'); setIsSidebarOpen(true); }}
                       >
-                        <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-xl p-4">
-                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-zinc-300">
-                            <Plane className="w-4 h-4" />
-                            Flights Found ({message.travelData.flights.length})
-                          </h4>
-                          <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 scrollbar-thin">
-                            {message.travelData.flights.map((flight, idx) => (
-                              <FlightCard key={`msg-flight-${idx}-${flight.id}`} flight={flight} />
-                            ))}
-                          </div>
-                        </div>
-                      </motion.div>
+                        <Plane className="w-3 h-3 mr-1" />
+                        {message.travelData.flights.length} flights
+                      </Badge>
                     )}
-
-                    {/* Hotels Card */}
                     {message.travelData.hotels.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="w-full"
+                      <Badge
+                        variant="secondary"
+                        className="cursor-pointer hover:bg-zinc-600"
+                        onClick={() => { setActiveTab('hotels'); setIsSidebarOpen(true); }}
                       >
-                        <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-xl p-4">
-                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-zinc-300">
-                            <Hotel className="w-4 h-4" />
-                            Hotels Found ({message.travelData.hotels.length})
-                          </h4>
-                          <div className="max-h-[420px] overflow-y-auto pr-2 scrollbar-thin">
-                            <div className="grid grid-cols-2 gap-2">
-                              {message.travelData.hotels.map((hotel, idx) => (
-                                <HotelCard key={`msg-hotel-${idx}-${hotel.id}`} hotel={hotel} />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
+                        <Hotel className="w-3 h-3 mr-1" />
+                        {message.travelData.hotels.length} hotels
+                      </Badge>
                     )}
-
-                    {/* Activities Card */}
                     {message.travelData.activities.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="w-full"
+                      <Badge
+                        variant="secondary"
+                        className="cursor-pointer hover:bg-zinc-600"
+                        onClick={() => { setActiveTab('activities'); setIsSidebarOpen(true); }}
                       >
-                        <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-xl p-4">
-                          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-zinc-300">
-                            <MapPin className="w-4 h-4" />
-                            Activities Found ({message.travelData.activities.length})
-                          </h4>
-                          <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
-                            <div className="grid grid-cols-3 gap-2">
-                              {message.travelData.activities.map((activity, idx) => (
-                                <ActivityCard key={`msg-activity-${idx}-${activity.id}`} activity={activity} />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
+                        <MapPin className="w-3 h-3 mr-1" />
+                        {message.travelData.activities.length} activities
+                      </Badge>
                     )}
-                  </>
+                  </div>
                 )}
                 </div>
               ))}
@@ -1016,50 +980,39 @@ export default function ChatPage() {
                       </div>
                     )}
 
-                    {/* Live travel data cards */}
-                    {currentTravelData.flights.length > 0 && (
-                      <div className="mb-4">
-                        <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                          <Plane className="w-4 h-4" />
-                          Flights Found ({currentTravelData.flights.length})
-                        </h4>
-                        <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 scrollbar-thin">
-                          {currentTravelData.flights.map((flight, idx) => (
-                            <FlightCard key={`flight-${idx}-${flight.id}`} flight={flight} />
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {currentTravelData.hotels.length > 0 && (
-                      <div className="mb-4">
-                        <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                          <Hotel className="w-4 h-4" />
-                          Hotels Found ({currentTravelData.hotels.length})
-                        </h4>
-                        <div className="max-h-[420px] overflow-y-auto pr-2 scrollbar-thin">
-                          <div className="grid grid-cols-2 gap-2">
-                            {currentTravelData.hotels.map((hotel, idx) => (
-                              <HotelCard key={`hotel-${idx}-${hotel.id}`} hotel={hotel} />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {currentTravelData.activities.length > 0 && (
-                      <div className="mb-4">
-                        <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                          <MapPin className="w-4 h-4" />
-                          Activities Found ({currentTravelData.activities.length})
-                        </h4>
-                        <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
-                          <div className="grid grid-cols-3 gap-2">
-                            {currentTravelData.activities.map((activity, idx) => (
-                              <ActivityCard key={`activity-${idx}-${activity.id}`} activity={activity} />
-                            ))}
-                          </div>
-                        </div>
+                    {/* Live travel data summary - results shown in sidebar */}
+                    {(currentTravelData.flights.length > 0 || currentTravelData.hotels.length > 0 || currentTravelData.activities.length > 0) && (
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {currentTravelData.flights.length > 0 && (
+                          <Badge
+                            variant="secondary"
+                            className="cursor-pointer hover:bg-zinc-600"
+                            onClick={() => { setActiveTab('flights'); setIsSidebarOpen(true); }}
+                          >
+                            <Plane className="w-3 h-3 mr-1" />
+                            {currentTravelData.flights.length} flights found
+                          </Badge>
+                        )}
+                        {currentTravelData.hotels.length > 0 && (
+                          <Badge
+                            variant="secondary"
+                            className="cursor-pointer hover:bg-zinc-600"
+                            onClick={() => { setActiveTab('hotels'); setIsSidebarOpen(true); }}
+                          >
+                            <Hotel className="w-3 h-3 mr-1" />
+                            {currentTravelData.hotels.length} hotels found
+                          </Badge>
+                        )}
+                        {currentTravelData.activities.length > 0 && (
+                          <Badge
+                            variant="secondary"
+                            className="cursor-pointer hover:bg-zinc-600"
+                            onClick={() => { setActiveTab('activities'); setIsSidebarOpen(true); }}
+                          >
+                            <MapPin className="w-3 h-3 mr-1" />
+                            {currentTravelData.activities.length} activities found
+                          </Badge>
+                        )}
                       </div>
                     )}
 
