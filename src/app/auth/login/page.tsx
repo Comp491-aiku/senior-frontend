@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Sparkles, Mail, Lock, Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -14,6 +14,8 @@ import { toast } from 'sonner'
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectUrl = searchParams.get('redirect') || '/dashboard'
   const { signInWithEmail, signInWithGoogle, isAuthenticated } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -23,7 +25,7 @@ export default function LoginPage() {
 
   // Redirect if already authenticated
   if (isAuthenticated) {
-    router.push('/dashboard')
+    router.push(redirectUrl)
     return null
   }
 
@@ -41,7 +43,7 @@ export default function LoginPage() {
         toast.error(error.message || 'Failed to sign in')
       } else {
         toast.success('Welcome back!')
-        router.push('/dashboard')
+        router.push(redirectUrl)
       }
     } catch {
       toast.error('An unexpected error occurred')
@@ -208,7 +210,7 @@ export default function LoginPage() {
           <CardFooter className="justify-center">
             <p className="text-sm text-muted-foreground">
               Don&apos;t have an account?{' '}
-              <Link href="/auth/register" className="text-primary hover:underline font-medium">
+              <Link href={`/auth/register${redirectUrl !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`} className="text-primary hover:underline font-medium">
                 Sign up
               </Link>
             </p>

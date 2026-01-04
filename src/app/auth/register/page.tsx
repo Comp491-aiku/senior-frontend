@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Sparkles, Mail, Lock, Eye, EyeOff, ArrowLeft, Loader2, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -14,6 +14,8 @@ import { toast } from 'sonner'
 
 export default function RegisterPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectUrl = searchParams.get('redirect') || '/dashboard'
   const { signUp, signInWithGoogle, isAuthenticated } = useAuth()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -25,7 +27,7 @@ export default function RegisterPage() {
 
   // Redirect if already authenticated
   if (isAuthenticated) {
-    router.push('/dashboard')
+    router.push(redirectUrl)
     return null
   }
 
@@ -54,7 +56,8 @@ export default function RegisterPage() {
         toast.error(error.message || 'Failed to create account')
       } else {
         toast.success('Account created! Please check your email to confirm.')
-        router.push('/auth/login')
+        const loginUrl = redirectUrl !== '/dashboard' ? `/auth/login?redirect=${encodeURIComponent(redirectUrl)}` : '/auth/login'
+        router.push(loginUrl)
       }
     } catch {
       toast.error('An unexpected error occurred')
@@ -256,7 +259,7 @@ export default function RegisterPage() {
           <CardFooter className="justify-center">
             <p className="text-sm text-muted-foreground">
               Already have an account?{' '}
-              <Link href="/auth/login" className="text-primary hover:underline font-medium">
+              <Link href={`/auth/login${redirectUrl !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`} className="text-primary hover:underline font-medium">
                 Sign in
               </Link>
             </p>
