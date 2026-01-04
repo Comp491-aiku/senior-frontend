@@ -164,16 +164,44 @@ export function TodoList({ conversationId, maxHeight = '400px', embedded = false
               </motion.div>
             ) : (
               sortedTodos.map((todo) => (
-                <TodoItem
-                  key={todo.id}
-                  todo={todo}
-                  onToggle={handleToggleTodo}
-                  onUpdate={handleUpdateTodo}
-                  onDelete={handleDeleteTodo}
-                  onEdit={setEditingTodo}
-                  isToggling={toggleTodo.isPending}
-                  isDeleting={deleteTodo.isPending}
-                />
+                <div key={todo.id}>
+                  {editingTodo?.id === todo.id ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-3 rounded-lg border border-zinc-600 bg-zinc-800/80"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs text-muted-foreground">Editing todo</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 text-xs"
+                          onClick={() => setEditingTodo(null)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                      <TodoForm
+                        mode="edit"
+                        initialData={editingTodo}
+                        onSubmit={(data) => handleUpdateTodo(editingTodo.id, data)}
+                        onCancel={() => setEditingTodo(null)}
+                        isSubmitting={updateTodo.isPending}
+                      />
+                    </motion.div>
+                  ) : (
+                    <TodoItem
+                      todo={todo}
+                      onToggle={handleToggleTodo}
+                      onUpdate={handleUpdateTodo}
+                      onDelete={handleDeleteTodo}
+                      onEdit={setEditingTodo}
+                      isToggling={toggleTodo.isPending}
+                      isDeleting={deleteTodo.isPending}
+                    />
+                  )}
+                </div>
               ))
             )}
           </AnimatePresence>
@@ -201,16 +229,44 @@ export function TodoList({ conversationId, maxHeight = '400px', embedded = false
                 </motion.div>
               ) : (
                 sortedTodos.map((todo) => (
-                  <TodoItem
-                    key={todo.id}
-                    todo={todo}
-                    onToggle={handleToggleTodo}
-                    onUpdate={handleUpdateTodo}
-                    onDelete={handleDeleteTodo}
-                    onEdit={setEditingTodo}
-                    isToggling={toggleTodo.isPending}
-                    isDeleting={deleteTodo.isPending}
-                  />
+                  <div key={todo.id}>
+                    {editingTodo?.id === todo.id ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="p-3 rounded-lg border border-zinc-600 bg-zinc-800/80"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs text-muted-foreground">Editing todo</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 text-xs"
+                            onClick={() => setEditingTodo(null)}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                        <TodoForm
+                          mode="edit"
+                          initialData={editingTodo}
+                          onSubmit={(data) => handleUpdateTodo(editingTodo.id, data)}
+                          onCancel={() => setEditingTodo(null)}
+                          isSubmitting={updateTodo.isPending}
+                        />
+                      </motion.div>
+                    ) : (
+                      <TodoItem
+                        todo={todo}
+                        onToggle={handleToggleTodo}
+                        onUpdate={handleUpdateTodo}
+                        onDelete={handleDeleteTodo}
+                        onEdit={setEditingTodo}
+                        isToggling={toggleTodo.isPending}
+                        isDeleting={deleteTodo.isPending}
+                      />
+                    )}
+                  </div>
                 ))
               )}
             </AnimatePresence>
@@ -218,36 +274,13 @@ export function TodoList({ conversationId, maxHeight = '400px', embedded = false
         </ScrollArea>
       )}
 
-      {/* Add todo form */}
+      {/* Add todo form - always show create form since editing is inline */}
       <div className="mt-4 pt-4 border-t border-zinc-800">
-        {editingTodo ? (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Editing todo</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 text-xs"
-                onClick={() => setEditingTodo(null)}
-              >
-                Cancel
-              </Button>
-            </div>
-            <TodoForm
-              mode="edit"
-              initialData={editingTodo}
-              onSubmit={(data) => handleUpdateTodo(editingTodo.id, data)}
-              onCancel={() => setEditingTodo(null)}
-              isSubmitting={updateTodo.isPending}
-            />
-          </div>
-        ) : (
-          <TodoForm
-            compact
-            onSubmit={handleCreateTodo}
-            isSubmitting={createTodo.isPending}
-          />
-        )}
+        <TodoForm
+          compact
+          onSubmit={handleCreateTodo}
+          isSubmitting={createTodo.isPending}
+        />
       </div>
     </div>
   )
