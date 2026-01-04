@@ -30,6 +30,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { api, Message, streamChat, StreamEvent } from '@/lib/api'
+import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import ReactMarkdown from 'react-markdown'
@@ -280,6 +281,7 @@ interface ChatMessage extends Message {
 export default function ChatPage() {
   const params = useParams()
   const router = useRouter()
+  const queryClient = useQueryClient()
   const paramId = params.id as string
   const isNewChat = paramId === 'new'
 
@@ -635,6 +637,19 @@ export default function ChatPage() {
               travelDataCollected.activities = [...travelDataCollected.activities, ...activities]
               setCurrentTravelData({ ...travelDataCollected })
             }
+          }
+
+          // Handle todos event - refresh todo list when AI creates todos
+          if (event.type === 'todos' && event.items) {
+            const todoItems = event.items as Record<string, unknown>[]
+            console.log('[Todos] AI created todos:', todoItems.length)
+            // Invalidate todos query to refresh the TodoList component
+            if (conversationId) {
+              queryClient.invalidateQueries({ queryKey: ['todos', conversationId] })
+            }
+            // Switch to todos tab to show the new todos
+            setActiveTab('todos')
+            setIsSidebarOpen(true)
           }
 
           // Final content
