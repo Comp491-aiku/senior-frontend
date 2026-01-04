@@ -151,13 +151,13 @@ export default function ShareLinkPage() {
 
                 <div className="grid gap-3">
                   <Button asChild size="lg" className="w-full">
-                    <Link href={`/auth/login?redirect=/share/${token}`}>
+                    <Link href={`/auth/login?redirect=/shared/${token}`}>
                       <LogIn className="w-4 h-4 mr-2" />
                       Sign In
                     </Link>
                   </Button>
                   <Button variant="outline" asChild size="lg" className="w-full">
-                    <Link href={`/auth/register?redirect=/share/${token}`}>
+                    <Link href={`/auth/register?redirect=/shared/${token}`}>
                       <UserPlus className="w-4 h-4 mr-2" />
                       Create Account
                     </Link>
