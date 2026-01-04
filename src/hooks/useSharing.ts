@@ -8,6 +8,7 @@ export function useSharing(conversationId?: string) {
   const queryClient = useQueryClient()
 
   // Fetch shares for a conversation
+  // Note: Only the owner can list shares, shared users will get 403
   const {
     data: shares = [],
     isLoading: isLoadingShares,
@@ -15,8 +16,19 @@ export function useSharing(conversationId?: string) {
     refetch: refetchShares,
   } = useQuery({
     queryKey: ['shares', conversationId],
-    queryFn: () => api.getShares(conversationId!),
+    queryFn: async () => {
+      try {
+        return await api.getShares(conversationId!)
+      } catch (error: unknown) {
+        // Silently fail for 403 (shared users can't list shares)
+        if (error instanceof Error && error.message.includes('403')) {
+          return []
+        }
+        throw error
+      }
+    },
     enabled: !!conversationId,
+    retry: false, // Don't retry on 403
   })
 
   // Create a new share

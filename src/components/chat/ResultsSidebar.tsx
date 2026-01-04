@@ -31,8 +31,8 @@ interface ResultsSidebarProps {
 const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
   { id: 'flights', label: 'Flights', icon: <Plane className="w-4 h-4" /> },
   { id: 'hotels', label: 'Hotels', icon: <Hotel className="w-4 h-4" /> },
-  { id: 'activities', label: 'Activities', icon: <MapPin className="w-4 h-4" /> },
-  { id: 'todos', label: 'Todos', icon: <ListTodo className="w-4 h-4" /> },
+  { id: 'activities', label: 'Places', icon: <MapPin className="w-4 h-4" /> },
+  { id: 'todos', label: 'To-Do', icon: <ListTodo className="w-4 h-4" /> },
 ]
 
 export function ResultsSidebar({
@@ -64,7 +64,7 @@ export function ResultsSidebar({
         {isOpen && (
           <motion.div
             initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 400, opacity: 1 }}
+            animate={{ width: 440, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="hidden lg:flex flex-col border-l border-zinc-800 bg-zinc-900/50 h-full overflow-hidden"
@@ -89,7 +89,7 @@ export function ResultsSidebar({
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
                   className={cn(
-                    'flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors',
+                    'flex-1 flex items-center justify-center gap-1.5 py-3 text-xs font-medium transition-colors',
                     activeTab === tab.id
                       ? 'text-zinc-100 border-b-2 border-zinc-100'
                       : 'text-zinc-400 hover:text-zinc-300'
@@ -99,7 +99,7 @@ export function ResultsSidebar({
                   <span>{tab.label}</span>
                   {tab.id !== 'todos' && counts[tab.id as keyof typeof counts] > 0 && (
                     <span className={cn(
-                      'px-1.5 py-0.5 text-xs rounded-full',
+                      'ml-0.5 px-1 py-0.5 text-[10px] rounded-full min-w-[18px]',
                       activeTab === tab.id ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-700 text-zinc-300'
                     )}>
                       {counts[tab.id as keyof typeof counts]}
@@ -211,7 +211,7 @@ export function ResultsSidebar({
                     key={tab.id}
                     onClick={() => onTabChange(tab.id)}
                     className={cn(
-                      'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-colors',
+                      'flex-1 flex items-center justify-center gap-1 py-2.5 text-xs font-medium transition-colors',
                       activeTab === tab.id
                         ? 'text-zinc-100 border-b-2 border-zinc-100'
                         : 'text-zinc-400 hover:text-zinc-300'
@@ -221,7 +221,7 @@ export function ResultsSidebar({
                     <span>{tab.label}</span>
                     {tab.id !== 'todos' && counts[tab.id as keyof typeof counts] > 0 && (
                       <span className={cn(
-                        'px-1.5 py-0.5 text-xs rounded-full',
+                        'ml-0.5 px-1 py-0.5 text-[10px] rounded-full min-w-[16px]',
                         activeTab === tab.id ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-700 text-zinc-300'
                       )}>
                         {counts[tab.id as keyof typeof counts]}
