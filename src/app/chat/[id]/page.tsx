@@ -644,8 +644,13 @@ export default function ChatPage() {
             const todoItems = event.items as Record<string, unknown>[]
             console.log('[Todos] AI created todos:', todoItems.length)
             // Invalidate todos query to refresh the TodoList component
-            if (conversationId) {
-              queryClient.invalidateQueries({ queryKey: ['todos', conversationId] })
+            // Use partial match to invalidate all todos queries for this conversation
+            const targetConvId = conversationId || returnedConversationId
+            if (targetConvId) {
+              queryClient.invalidateQueries({
+                predicate: (query) =>
+                  query.queryKey[0] === 'todos' && query.queryKey[1] === targetConvId
+              })
             }
             // Switch to todos tab to show the new todos
             setActiveTab('todos')

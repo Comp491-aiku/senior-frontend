@@ -29,11 +29,12 @@ import { Todo, TodoStatus, UpdateTodoRequest, CreateTodoRequest } from '@/lib/ap
 interface TodoListProps {
   conversationId: string
   maxHeight?: string
+  embedded?: boolean // When true, removes internal ScrollArea (for use in sidebar)
 }
 
 type FilterType = 'all' | 'active' | 'completed'
 
-export function TodoList({ conversationId, maxHeight = '400px' }: TodoListProps) {
+export function TodoList({ conversationId, maxHeight = '400px', embedded = false }: TodoListProps) {
   const [filter, setFilter] = useState<FilterType>('all')
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null)
 
@@ -141,8 +142,8 @@ export function TodoList({ conversationId, maxHeight = '400px' }: TodoListProps)
       )}
 
       {/* Todo list */}
-      <ScrollArea className="flex-1" style={{ maxHeight }}>
-        <div className="space-y-2 pr-2">
+      {embedded ? (
+        <div className="flex-1 space-y-2">
           <AnimatePresence mode="popLayout">
             {sortedTodos.length === 0 ? (
               <motion.div
@@ -177,7 +178,45 @@ export function TodoList({ conversationId, maxHeight = '400px' }: TodoListProps)
             )}
           </AnimatePresence>
         </div>
-      </ScrollArea>
+      ) : (
+        <ScrollArea className="flex-1" style={{ maxHeight }}>
+          <div className="space-y-2 pr-2">
+            <AnimatePresence mode="popLayout">
+              {sortedTodos.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-8"
+                >
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-zinc-800 flex items-center justify-center">
+                    <ListTodo className="w-6 h-6 text-zinc-500" />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {filter === 'completed'
+                      ? 'No completed todos yet'
+                      : filter === 'active'
+                      ? 'All todos are completed!'
+                      : 'No todos yet. Add one below!'}
+                  </p>
+                </motion.div>
+              ) : (
+                sortedTodos.map((todo) => (
+                  <TodoItem
+                    key={todo.id}
+                    todo={todo}
+                    onToggle={handleToggleTodo}
+                    onUpdate={handleUpdateTodo}
+                    onDelete={handleDeleteTodo}
+                    onEdit={setEditingTodo}
+                    isToggling={toggleTodo.isPending}
+                    isDeleting={deleteTodo.isPending}
+                  />
+                ))
+              )}
+            </AnimatePresence>
+          </div>
+        </ScrollArea>
+      )}
 
       {/* Add todo form */}
       <div className="mt-4 pt-4 border-t border-zinc-800">
