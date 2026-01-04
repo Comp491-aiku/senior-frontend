@@ -31,8 +31,8 @@ interface ResultsSidebarProps {
 const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
   { id: 'flights', label: 'Flights', icon: <Plane className="w-4 h-4" /> },
   { id: 'hotels', label: 'Hotels', icon: <Hotel className="w-4 h-4" /> },
-  { id: 'activities', label: 'Places', icon: <MapPin className="w-4 h-4" /> },
-  { id: 'todos', label: 'To-Do', icon: <ListTodo className="w-4 h-4" /> },
+  { id: 'activities', label: 'Activities', icon: <MapPin className="w-4 h-4" /> },
+  { id: 'todos', label: 'Todos', icon: <ListTodo className="w-4 h-4" /> },
 ]
 
 export function ResultsSidebar({
@@ -89,7 +89,7 @@ export function ResultsSidebar({
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
                   className={cn(
-                    'flex-1 flex items-center justify-center gap-1.5 py-3 text-xs font-medium transition-colors',
+                    'flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors',
                     activeTab === tab.id
                       ? 'text-zinc-100 border-b-2 border-zinc-100'
                       : 'text-zinc-400 hover:text-zinc-300'
