@@ -156,7 +156,7 @@ export function ResultsSidebar({
                   )}
 
                   {activeTab === 'todos' && conversationId && (
-                    <TodoList conversationId={conversationId} />
+                    <TodoList conversationId={conversationId} embedded />
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -266,7 +266,7 @@ export function ResultsSidebar({
                     )}
 
                     {activeTab === 'todos' && conversationId && (
-                      <TodoList conversationId={conversationId} />
+                      <TodoList conversationId={conversationId} embedded />
                     )}
                   </motion.div>
                 </AnimatePresence>
