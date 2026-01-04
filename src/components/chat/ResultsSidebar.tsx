@@ -64,7 +64,7 @@ export function ResultsSidebar({
         {isOpen && (
           <motion.div
             initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 440, opacity: 1 }}
+            animate={{ width: 480, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="hidden lg:flex flex-col border-l border-zinc-800 bg-zinc-900/50 h-full overflow-hidden"
