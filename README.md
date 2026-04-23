@@ -1,169 +1,151 @@
-# AIKU Frontend
+# AIKU — Senior Design Project Frontend
 
-AI-powered travel planning application frontend built with Next.js 15, TypeScript, Tailwind CSS, and shadcn/ui.
+> Koç University Senior Design Project. AI-powered travel planning at full feature depth — itineraries, maps, flights, weather, budget.
 
-## Tech Stack
+[![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![shadcn/ui](https://img.shields.io/badge/shadcn/ui-000000?style=flat-square)](https://ui.shadcn.com/)
 
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **UI Components**: shadcn/ui (Radix UI)
-- **State Management**: Zustand
-- **Data Fetching**: TanStack Query (React Query)
-- **Maps**: Mapbox / Google Maps
-- **Charts**: Recharts
-- **HTTP Client**: Axios
+---
+
+## What this is
+
+**AIKU** is the Senior Design Project of [Koç University Comp491-aiku team](https://github.com/Comp491-aiku) — an AI-powered travel planning platform. This repo is the **full production frontend** with map integration, weather data, budget tracking, and flight/accommodation search.
+
+For the standalone planner prototype, see [aiku_frontend](https://github.com/1lker/aiku_frontend).
+
+---
 
 ## Features
 
-- Trip planning with AI-powered recommendations
-- Interactive itinerary builder with day-by-day schedules
-- Map integration for visualizing locations
-- Budget tracking and cost management
-- Weather forecasts for travel dates
-- Flight and accommodation search
-- Modern, responsive UI with dark mode support
+| Capability | Detail |
+|---|---|
+| **AI itinerary generation** | Day-by-day schedules from natural-language trip descriptions |
+| **Interactive itinerary builder** | Drag, edit, reorder activities per day |
+| **Map integration** | Mapbox / Google Maps for location visualization |
+| **Weather forecasts** | Per-destination forecast for travel dates |
+| **Budget tracker** | Cost management across flights, lodging, activities |
+| **Flight + accommodation search** | Integrated search across providers |
+| **Auth + persistence** | Supabase auth + Postgres storage |
+| **Dark mode** | Full theming support |
+| **Animations** | anime.js for itinerary transitions and onboarding |
 
-## Project Structure
+---
 
-```
-frontend/
-├── src/
-│   ├── app/                    # Next.js App Router pages
-│   │   ├── page.tsx           # Home page
-│   │   ├── layout.tsx         # Root layout
-│   │   ├── providers.tsx      # App providers
-│   │   └── trip/              # Trip-related pages
-│   │       ├── create/        # Create trip page
-│   │       └── [id]/          # Trip details page
-│   ├── components/            # React components
-│   │   ├── ui/               # shadcn/ui components
-│   │   ├── TripForm.tsx      # Trip creation form
-│   │   ├── ItineraryView.tsx # Itinerary display
-│   │   ├── MapView.tsx       # Map component
-│   │   └── BudgetTracker.tsx # Budget tracking
-│   ├── hooks/                # Custom React hooks
-│   │   ├── useTripPlanner.ts
-│   │   └── useItinerary.ts
-│   ├── services/             # API clients
-│   │   └── api.ts           # Backend API client
-│   ├── types/               # TypeScript types
-│   │   └── index.ts
-│   ├── lib/                 # Utility functions
-│   │   └── utils.ts
-│   └── utils/               # Helper functions
-├── public/                   # Static assets
-├── package.json
-├── tsconfig.json
-├── tailwind.config.ts
-├── next.config.js
-└── .env.local               # Environment variables
+## Architecture
+
+```mermaid
+flowchart TD
+    A[User Input<br/>natural language] --> B[Next.js App Router]
+    B --> C[TanStack Query<br/>cache layer]
+    C --> D[Supabase<br/>auth + Postgres]
+    C --> E[AI Backend<br/>itinerary generation]
+    C --> F[Map Provider<br/>Mapbox/Google]
+    C --> G[Weather API]
+    C --> H[Flight/Hotel APIs]
+
+    style A fill:#1a1a1f,stroke:#f97316,color:#fff
+    style D fill:#1a1a1f,stroke:#34d399,color:#fff
 ```
 
-## Getting Started
+---
 
-### Prerequisites
+## Tech stack
 
-- Node.js 18+ and npm/yarn/pnpm
-- Backend API running (see backend README)
+| Layer | Choice |
+|---|---|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS + shadcn/ui (Radix primitives) |
+| State | Zustand |
+| Data fetching | TanStack Query (React Query) |
+| Backend | Supabase (auth + Postgres + SSR) |
+| HTTP | Axios |
+| Maps | Mapbox + Google Maps |
+| Charts | Recharts |
+| Animation | anime.js |
+| Container | Docker |
 
-### Installation
+---
 
-1. Clone the repository:
+## Quick start
+
+### Local dev
+
 ```bash
-git clone <repository-url>
-cd frontend
-```
-
-2. Install dependencies:
-```bash
+git clone https://github.com/Comp491-aiku/senior-frontend.git
+cd senior-frontend
 npm install
-# or
-yarn install
-# or
-pnpm install
-```
+cp .env.example .env.local   # add your Supabase + map keys
 
-3. Set up environment variables:
-```bash
-cp .env.example .env.local
-```
-
-Edit `.env.local` and add your configuration:
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8000
-NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token
-```
-
-4. Run the development server:
-```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+# → http://localhost:3000
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+### Type check + lint
 
-## Available Scripts
+```bash
+npm run type-check
+npm run lint
+```
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run type-check` - Run TypeScript type checking
+### Production build
 
-## Environment Variables
+```bash
+npm run build
+npm start
+```
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `NEXT_PUBLIC_API_URL` | Backend API URL | Yes |
-| `NEXT_PUBLIC_MAPBOX_TOKEN` | Mapbox API token | No |
-| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Google Maps API key | No |
+### Docker
 
-## Key Components
+```bash
+docker build -t aiku-frontend .
+docker run -p 3000:3000 aiku-frontend
+```
 
-### TripForm
-Form component for creating and editing trips with destination, dates, budget, and preferences.
+---
 
-### ItineraryView
-Displays the complete trip itinerary with day-by-day breakdown of activities, meals, and accommodations.
+## Configuration
 
-### BudgetTracker
-Real-time budget tracking component showing spent vs. total budget with visual progress indicator.
+Required environment variables (see `.env.example`):
 
-### MapView
-Interactive map showing trip locations and routes (requires Mapbox or Google Maps API key).
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_MAPBOX_TOKEN=
+NEXT_PUBLIC_GOOGLE_MAPS_KEY=
+NEXT_PUBLIC_API_URL=        # AIKU backend
+```
 
-## API Integration
+---
 
-The frontend communicates with the FastAPI backend through the API client in `src/services/api.ts`.
+## Project structure
 
-Key endpoints:
-- `GET /api/trips` - List all trips
-- `POST /api/trips` - Create new trip
-- `GET /api/trips/:id` - Get trip details
-- `POST /api/trips/:id/itinerary/generate` - Generate itinerary
-- `GET /api/flights/search` - Search flights
-- `GET /api/accommodations/search` - Search accommodations
+```
+src/
+├── app/                # Next.js App Router pages
+├── components/         # Reusable UI components (shadcn-based)
+├── features/           # Feature-scoped modules (itinerary, map, search)
+├── hooks/              # Custom React hooks
+├── lib/                # API clients, Supabase client, utilities
+├── stores/             # Zustand stores
+└── types/              # Shared TypeScript types
+```
 
-## Styling
+---
 
-This project uses Tailwind CSS with shadcn/ui components. The design system is configured in:
-- `tailwind.config.ts` - Tailwind configuration
-- `src/app/globals.css` - Global styles and CSS variables
+## Team
 
-## Type Safety
+Built by the **Comp491-aiku Senior Design team** at Koç University.
 
-All API responses and component props are fully typed using TypeScript interfaces defined in `src/types/index.ts`.
+---
 
-## Contributing
+## Author (this repo's README)
 
-1. Create a feature branch
-2. Make your changes
-3. Run tests and linting
-4. Submit a pull request
+**İlker Yörü** — CTO @ [Mindra](https://mindra.co)
+[GitHub](https://github.com/1lker) · [LinkedIn](https://linkedin.com/in/ilker-yoru) · [ilkeryoru.com](https://ilkeryoru.com)
 
 ## License
 
